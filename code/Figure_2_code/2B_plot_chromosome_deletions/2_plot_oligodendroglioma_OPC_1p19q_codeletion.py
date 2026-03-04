@@ -157,6 +157,7 @@ p.add_layout(Label(
     text_color="black", text_font_size="10pt", y_offset=2))
 
 p.output_backend = "svg"
+os.makedirs("../../../figures/Figure_2/", exist_ok=True)
 export_svgs(p, filename="../../../figures/Figure_2/2543_OPC_chromosomes.svg") 
 
 # ---- Plot 2: Chromosome arm scatter chr1 ----

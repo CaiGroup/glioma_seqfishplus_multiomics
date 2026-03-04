@@ -157,7 +157,8 @@ p.add_layout(Label(
     text_color="black", text_font_size="10pt", y_offset=2))
 
 p.output_backend = "svg"
-export_svgs(p, filename="../../figures/Figure_2/2543_OPC_chromosomes.svg") 
+os.makedirs("../../../figures/Figure_2/", exist_ok=True)
+export_svgs(p, filename="../../../figures/Figure_2/2543_OPC_chromosomes.svg") 
 
 # ---- Plot 2: Chromosome arm scatter chr1 ----
 df_cell_chr = df_cell.sort_values('chrom_arm', key=lambda x: x.map({'p': 0, 'q': 1}))
@@ -208,7 +209,7 @@ p2.add_layout(Label(
     text_color="black", text_font_size="10pt", y_offset=2))
 
 p2.output_backend = "svg"
-export_svgs(p2, filename="../../figures/Figure_2/2543_OPC_chr1.svg")
+export_svgs(p2, filename="../../../figures/Figure_2/2543_OPC_chr1.svg")
 
 # ---- Plot 3: Chromosome arm scatter chr19 ----
 df_cell_chr = df_cell.sort_values('chrom_arm', key=lambda x: x.map({'p': 0, 'q': 1}))
@@ -258,7 +259,7 @@ p3.add_layout(Label(
     text_color="black", text_font_size="10pt", y_offset=2))
 
 p3.output_backend = "svg"
-export_svgs(p3, filename="../../figures/Figure_2/2543_OPC_chr19.svg")
+export_svgs(p3, filename="../../../figures/Figure_2/2543_OPC_chr19.svg")
 
 ##### Plot Normal Cell ####
 
@@ -334,7 +335,7 @@ p.add_layout(Label(
     text_color="black", text_font_size="10pt", y_offset=2))
 
 p.output_backend = "svg"
-export_svgs(p, filename="../../figures/Figure_2/2543_oligNormal_chromosomes.svg")
+export_svgs(p, filename="../../../figures/Figure_2/2543_oligNormal_chromosomes.svg")
 
 # ---- Plot 2: Chromosome arm scatter chr1 ----
 df_cell_chr = df_cell.sort_values('chrom_arm', key=lambda x: x.map({'p': 0, 'q': 1}))
@@ -385,7 +386,7 @@ p2.add_layout(Label(
     text_color="black", text_font_size="10pt", y_offset=2))
 
 p2.output_backend = "svg"
-export_svgs(p2, filename="../../figures/Figure_2/2543_oligNormal_chr1.svg")
+export_svgs(p2, filename="../../../figures/Figure_2/2543_oligNormal_chr1.svg")
 
 # ---- Plot 3: Chromosome arm scatter chr19 ----
 df_cell_chr = df_cell.sort_values('chrom_arm', key=lambda x: x.map({'p': 0, 'q': 1}))
@@ -435,7 +436,7 @@ p3.add_layout(Label(
     text_color="black", text_font_size="10pt", y_offset=2))
 
 p3.output_backend = "svg"
-export_svgs(p3, filename="../../figures/Figure_2/2543_oligNormal_chr19.svg")
+export_svgs(p3, filename="../../../figures/Figure_2/2543_oligNormal_chr19.svg")
 
 ##### Make Legends #####
 
@@ -466,7 +467,7 @@ p_legend.legend.border_line_color = None
 p_legend.legend.background_fill_alpha = 0.0
 
 p_legend.output_backend = "svg"
-export_svgs(p_legend, filename="../../figures/Figure_2/chromosome_legend.svg")
+export_svgs(p_legend, filename="../../../figures/Figure_2/chromosome_legend.svg")
 
 ## Chromosome Arm Legend
 
@@ -495,4 +496,4 @@ p_legend2.legend.border_line_color = None
 p_legend2.legend.background_fill_alpha = 0.0
 
 p_legend2.output_backend = "svg"
-export_svgs(p_legend2, filename="../../figures/Figure_2/chrom_arm_legend.svg")
+export_svgs(p_legend2, filename="../../../figures/Figure_2/chrom_arm_legend.svg")
