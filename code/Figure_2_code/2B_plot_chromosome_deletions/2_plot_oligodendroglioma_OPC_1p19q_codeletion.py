@@ -2,6 +2,7 @@ import glob
 import pandas as pd
 import os
 import pickle
+import numpy as np
 
 os.environ["PATH"] = os.path.expanduser("~/miniconda3/envs/fox_env24/bin") + ":" + os.environ["PATH"]
 pd.options.mode.chained_assignment = None
@@ -12,6 +13,8 @@ from bokeh.io import export_svgs
 from bokeh.models import ColumnDataSource, ColorBar, Span, Label, Range1d
 from bokeh.transform import factor_cmap
 from bokeh.models import Legend
+from scipy.spatial import ConvexHull
+from scipy.interpolate import splprep, splev
 
 palette_hex = [
     "#73b9a5", "#a33f3e", "#2261b2", "#fea17b", "#c5aedf",
@@ -31,6 +34,9 @@ palette_hex = [
     "#b2abca", "#e6bcb3", "#9783cf", "#2e9096", "#bd6c41",
 ]
 
+plot_hull = True
+plot_other_chr = False
+
 path = '/central/groups/mthomson/sgdata/CaiLab/michalp/Glioma_analysis/data/DNA_data'
 
 # get all files
@@ -41,15 +47,13 @@ patient_id = '2543'
 files = [i for i in files if patient_id in i]
 
 # load data
-df_1 = pd.read_csv(files[0], low_memory = False)
+df_1 = pd.read_csv(files[0], low_memory=False)
 
 # fix chromosomes
-# make dictionary
 probe_df = pd.read_csv("/central/groups/CaiLab/personal/jjfox/DNA_seqFISH/human/24-12-19_human_genome_DNA_seqFISH_final_probes.csv")
 df_unique = probe_df.drop_duplicates(subset='bin_name', keep='last')
 chr_dict = dict(zip(df_unique['bin_name'], df_unique['chr']))
 
-# map
 df_1["blockbin"] = (
     df_1["block_assigned"].str.replace("block_", "block", regex=False)
     + "_" +
@@ -58,404 +62,189 @@ df_1["blockbin"] = (
 df_1['chromosome_true'] = df_1.blockbin.map(chr_dict)
 
 # map chromosome arms
-# load dictionary mapping chromosome arms to blockbins
 with open('chrom_arm_dict.pkl', 'rb') as f:
     chrom_arm_dict = pickle.load(f)
 
-# map chromosome arms for blockbins
 df_1['chrom_arm'] = df_1.blockbin.map(chrom_arm_dict)
 
 # load cell type data
 celltype_df = pd.read_csv('/resnick/groups/mthomson/ci2_data/CaiLab/gbm/dna_distance_data/V2_24_patients_Obj_mapped.csv', low_memory=False)
-# replace . with _ in column names
-celltype_df.columns = [
-    col.replace('.', '_') for col in celltype_df.columns
-]
-# Rename column for cell ID
+celltype_df.columns = [col.replace('.', '_') for col in celltype_df.columns]
 celltype_df.rename(columns={'Unnamed: 0': 'cell_id'}, inplace=True)
-# get cell types in this sample
 gbm_cells = celltype_df.loc[celltype_df['ID'] == patient_id].copy()
-# remove underscore from IDs
 gbm_cells['cell_id'] = gbm_cells['cell_id'].apply(lambda x: int(x.split('_')[0]))
-# make dictionary of cell ID and cell type
-gbm_cell_dict = dict(zip(gbm_cells['cell_id'], gbm_cells['predicted_celltype']))                
-# add cell types to df_1
+gbm_cell_dict = dict(zip(gbm_cells['cell_id'], gbm_cells['predicted_celltype']))
 df_1['predicted_celltype'] = df_1['matched_label'].map(gbm_cell_dict)
 celltypes = df_1['predicted_celltype'].unique()
 
-##### Plot Tumor Cell ####
 
-# look at 1 cell
-cell = 7763
+def compute_scale_bar(shared_x_range, shared_y_range, scale_bar_length=2, inset_frac=0.04):
+    plot_x_min, plot_x_max = shared_x_range
+    plot_y_min, plot_y_max = shared_y_range
+    plot_x_span = plot_x_max - plot_x_min
+    plot_y_span = plot_y_max - plot_y_min
+    bar_inset_x = inset_frac * plot_x_span
+    bar_inset_y = inset_frac * plot_y_span
+    bar_x_end = plot_x_max - bar_inset_x
+    bar_x_start = bar_x_end - scale_bar_length
+    bar_y = plot_y_min + bar_inset_y
+    return bar_x_start, bar_x_end, bar_y
 
-df_cell = df_1.loc[df_1['matched_label'] == cell].copy()
 
-# drop na for serial and unassigned bins
-df_cell = df_cell[df_cell['chromosome_true'].notna()]
+def add_scale_bar(p, bar_x_start, bar_x_end, bar_y):
+    p.line([bar_x_start, bar_x_end], [bar_y, bar_y], line_width=3, line_color="black")
+    p.add_layout(Label(
+        x=(bar_x_start + bar_x_end) / 2, y=bar_y,
+        text="2 \u03bcm", text_align="center", text_baseline="bottom",
+        text_color="black", text_font_size="10pt", y_offset=2))
 
-# ---- Shared range computation ----
 
-x_min, x_max = df_cell['x'].min(), df_cell['x'].max()
-y_min, y_max = df_cell['y'].min(), df_cell['y'].max()
-x_span = x_max - x_min
-y_span = y_max - y_min
-max_span = max(x_span, y_span)
-x_center = (x_min + x_max) / 2
-y_center = (y_min + y_max) / 2
-pad = 0.05 * max_span
+def clean_axes(p):
+    p.xaxis.axis_label = None
+    p.yaxis.axis_label = None
+    p.xgrid.grid_line_color = None
+    p.ygrid.grid_line_color = None
+    p.xaxis.major_label_text_font_size = "0pt"
+    p.yaxis.major_label_text_font_size = "0pt"
+    p.xaxis.major_tick_line_color = None
+    p.xaxis.minor_tick_line_color = None
+    p.yaxis.major_tick_line_color = None
+    p.yaxis.minor_tick_line_color = None
+    p.xaxis.axis_line_color = None
+    p.yaxis.axis_line_color = None
+    p.title.text_color = "white"
 
-shared_x_range = (x_center - max_span/2 - pad, x_center + max_span/2 + pad)
-shared_y_range = (y_center - max_span/2 - pad, y_center + max_span/2 + pad)
 
-plot_size = 670
+def sort_chromosomes(unique_chrs):
+    unique_chrs = list(unique_chrs)
+    unique_chrs.sort(key=lambda x: x.split('chr')[1])
+    unique_chrs_num = unique_chrs[:-2]
+    unique_chrs_num.sort(key=lambda x: int(x.split('chr')[1]))
+    return unique_chrs_num + [unique_chrs[-2]] + [unique_chrs[-1]]
 
-# ---- Plot 1: Chromosome scatter ----
-source = ColumnDataSource(df_cell)
-unique_chrs = df_cell['chromosome_true'].unique()
-palette = palette_hex[:len(unique_chrs)]
-unique_chrs = list(unique_chrs)
-unique_chrs.sort(key=lambda x: x.split('chr')[1])
-unique_chrs_num = unique_chrs[:-2]
-unique_chrs_num.sort(key=lambda x: int(x.split('chr')[1]))
-unique_chrs = unique_chrs_num + [unique_chrs[-2]] + [unique_chrs[-1]]
 
-p = figure(title=f"Scatterplot by Chromosome Cell {cell}",
-           width=plot_size, height=plot_size,
-           background_fill_color="white",
-           border_fill_color="white",
-           x_range=Range1d(start=shared_x_range[0], end=shared_x_range[1]),
-           y_range=Range1d(start=shared_y_range[0], end=shared_y_range[1]))
+def compute_hull(df_cell, hull_gap=0.15):
+    all_points = np.column_stack([df_cell['x'].values, df_cell['y'].values])
+    hull = ConvexHull(all_points)
+    hull_verts = all_points[hull.vertices]
+    centroid = hull_verts.mean(axis=0)
+    directions = hull_verts - centroid
+    directions = directions / np.linalg.norm(directions, axis=1, keepdims=True)
+    hull_verts_expanded = hull_verts + directions * hull_gap
+    hull_verts_closed = np.vstack([hull_verts_expanded, hull_verts_expanded[0]])
+    tck, u = splprep([hull_verts_closed[:, 0], hull_verts_closed[:, 1]], s=0, per=True, k=3)
+    u_fine = np.linspace(0, 1, 300)
+    hull_xs, hull_ys = splev(u_fine, tck)
+    return list(hull_xs), list(hull_ys)
 
-for chr_value, color in zip(unique_chrs, palette):
-    chr_source = ColumnDataSource(df_cell[df_cell['chromosome_true'] == chr_value])
-    p.scatter('x', 'y', source=chr_source, size=13, fill_alpha=0.8, color=color)
 
-#p.legend.visible = False
-p.xaxis.axis_label = None
-p.yaxis.axis_label = None
-p.xgrid.grid_line_color = None
-p.ygrid.grid_line_color = None
-p.xaxis.major_label_text_font_size = "0pt"
-p.yaxis.major_label_text_font_size = "0pt"
-p.xaxis.major_tick_line_color = None
-p.xaxis.minor_tick_line_color = None
-p.yaxis.major_tick_line_color = None
-p.yaxis.minor_tick_line_color = None
-p.xaxis.axis_line_color = None
-p.yaxis.axis_line_color = None
-p.title.text_color = "white"
+def compute_shared_range(df_cell, pad_frac=0.05):
+    x_min, x_max = df_cell['x'].min(), df_cell['x'].max()
+    y_min, y_max = df_cell['y'].min(), df_cell['y'].max()
+    x_span = x_max - x_min
+    y_span = y_max - y_min
+    max_span = max(x_span, y_span)
+    x_center = (x_min + x_max) / 2
+    y_center = (y_min + y_max) / 2
+    pad = pad_frac * max_span
+    shared_x_range = (x_center - max_span/2 - pad, x_center + max_span/2 + pad)
+    shared_y_range = (y_center - max_span/2 - pad, y_center + max_span/2 + pad)
+    return shared_x_range, shared_y_range
 
-scale_bar_length = 2
-bar_x_end = x_max - 0.05 * x_span
-bar_x_start = bar_x_end - scale_bar_length
-bar_y = y_min + 0.05 * y_span
 
-p.line([bar_x_start, bar_x_end], [bar_y, bar_y], line_width=3, line_color="black")
-p.add_layout(Label(
-    x=(bar_x_start + bar_x_end) / 2, y=bar_y,
-    text="2 \u03bcm", text_align="center", text_baseline="bottom",
-    text_color="black", text_font_size="10pt", y_offset=2))
+def plot_cell(df_1, cell, label, out_dir, plot_hull=True, plot_other_chr=True, plot_size=670, scale_bar_length=2):
+    df_cell = df_1.loc[df_1['matched_label'] == cell].copy()
+    df_cell = df_cell[df_cell['chromosome_true'].notna()]
 
-p.output_backend = "svg"
+    shared_x_range, shared_y_range = compute_shared_range(df_cell)
+    hull_xs, hull_ys = compute_hull(df_cell)
+    bar_x_start, bar_x_end, bar_y = compute_scale_bar(shared_x_range, shared_y_range, scale_bar_length)
+
+    unique_chrs = sort_chromosomes(df_cell['chromosome_true'].unique())
+    palette = palette_hex[:len(unique_chrs)]
+
+    # Plot 1: Chromosome scatter
+    p = figure(title=f"Scatterplot by Chromosome Cell {cell}",
+               width=plot_size, height=plot_size,
+               background_fill_color="white",
+               border_fill_color="white",
+               outline_line_color=None,
+               x_range=Range1d(start=shared_x_range[0], end=shared_x_range[1]),
+               y_range=Range1d(start=shared_y_range[0], end=shared_y_range[1]))
+
+    for chr_value, color in zip(unique_chrs, palette):
+        chr_source = ColumnDataSource(df_cell[df_cell['chromosome_true'] == chr_value])
+        p.scatter('x', 'y', source=chr_source, size=13, fill_alpha=0.8, color=color)
+
+    if plot_hull:
+        p.line(hull_xs, hull_ys, line_width=1.5, line_color="black", line_dash="dashed")
+    
+    clean_axes(p)
+    add_scale_bar(p, bar_x_start, bar_x_end, bar_y)
+    p.output_backend = "svg"
+    export_svgs(p, filename=f"{out_dir}/{label}_chromosomes.svg")
+
+    # Plot 2: chr arm scatter
+    chrom_factors = ['p', 'q']
+    color_mapper_arms = factor_cmap('chrom_arm', palette=[palette_hex[1], palette_hex[2]], factors=chrom_factors)
+
+    for highlight_chr, plot_label in [('chr1', 'chr1'), ('chr19', 'chr19')]:
+        df_cell_chr = df_cell.sort_values('chrom_arm', key=lambda x: x.map({'p': 0, 'q': 1}))
+
+        p_arm = figure(title=f"Scatter Plot Colored by Chromosome Arm",
+                       background_fill_color="white",
+                       border_fill_color="white",
+                       outline_line_color=None,
+                       x_range=Range1d(start=shared_x_range[0], end=shared_x_range[1]),
+                       y_range=Range1d(start=shared_y_range[0], end=shared_y_range[1]),
+                       width=plot_size, height=plot_size)
+
+        for chr_value in unique_chrs:
+            if chr_value == highlight_chr:
+                continue
+            chr_source = ColumnDataSource(df_cell_chr[df_cell_chr['chromosome_true'] == chr_value])
+            bg_color = '#CCCCCC' if plot_other_chr else '#FFFFFF'
+            p_arm.scatter('x', 'y', source=chr_source, size=13, fill_alpha=0.8, color=bg_color)
+
+        highlight_df = df_cell_chr[df_cell_chr['chromosome_true'] == highlight_chr]
+        highlight_source = ColumnDataSource(highlight_df)
+        color_mapper = factor_cmap('chrom_arm', palette=[palette_hex[1], palette_hex[2]], factors=chrom_factors)
+        p_arm.scatter('x', 'y', source=highlight_source, size=13, fill_alpha=0.8, color=color_mapper)
+
+        if plot_hull:
+            p_arm.line(hull_xs, hull_ys, line_width=1.5, line_color="black", line_dash="dashed")
+
+        clean_axes(p_arm)
+        add_scale_bar(p_arm, bar_x_start, bar_x_end, bar_y)
+        p_arm.output_backend = "svg"
+        export_svgs(p_arm, filename=f"{out_dir}/{label}_{plot_label}.svg")
+
+
 os.makedirs("../../../figures/Figure_2/", exist_ok=True)
-export_svgs(p, filename="../../../figures/Figure_2/2543_OPC_chromosomes.svg") 
+out_dir = "../../../figures/Figure_2"
 
-# ---- Plot 2: Chromosome arm scatter chr1 ----
-df_cell_chr = df_cell.sort_values('chrom_arm', key=lambda x: x.map({'p': 0, 'q': 1}))
-source = ColumnDataSource(df_cell_chr)
+plot_cell(df_1, cell=7763, label="2543_OPC",        out_dir=out_dir, plot_hull=plot_hull, plot_other_chr=plot_other_chr)
+plot_cell(df_1, cell=2057, label="2543_oligNormal", out_dir=out_dir, plot_hull=plot_hull, plot_other_chr=plot_other_chr)
 
-chrom_factors = ['p', 'q']
-color_mapper = factor_cmap('chrom_arm', palette=[palette_hex[1], palette_hex[2]], factors=chrom_factors)
-
-p2 = figure(title="Scatter Plot Colored by Chromosome Arm",
-           background_fill_color="white",
-           border_fill_color="white",
-           x_range=Range1d(start=shared_x_range[0], end=shared_x_range[1]),
-           y_range=Range1d(start=shared_y_range[0], end=shared_y_range[1]),
-           width=plot_size, height=plot_size)
-
-# Plot all non-chr1 first (grey, background)
-for chr_value, color in zip(unique_chrs, palette):
-    if chr_value == 'chr1':
-        continue
-    chr_source = ColumnDataSource(df_cell_chr[df_cell_chr['chromosome_true'] == chr_value])
-    p2.scatter('x', 'y', source=chr_source, size=13, fill_alpha=0.8, color='#CCCCCC')
-
-# Plot chr1 last (on top, colored by arm)
-chr1_df = df_cell_chr[df_cell_chr['chromosome_true'] == 'chr1']
-chr1_source = ColumnDataSource(chr1_df)
-p2.scatter('x', 'y', source=chr1_source, size=13, fill_alpha=0.8, color=color_mapper)
-
-
-#p2.legend.visible = False
-p2.xaxis.axis_label = None
-p2.yaxis.axis_label = None
-p2.xgrid.grid_line_color = None
-p2.ygrid.grid_line_color = None
-p2.xaxis.major_label_text_font_size = "0pt"
-p2.yaxis.major_label_text_font_size = "0pt"
-p2.xaxis.major_tick_line_color = None
-p2.xaxis.minor_tick_line_color = None
-p2.yaxis.major_tick_line_color = None
-p2.yaxis.minor_tick_line_color = None
-p2.xaxis.axis_line_color = None
-p2.yaxis.axis_line_color = None
-p2.title.text_color = "white"
-
-p2.line([bar_x_start, bar_x_end], [bar_y, bar_y], line_width=3, line_color="black")
-p2.add_layout(Label(
-    x=(bar_x_start + bar_x_end) / 2, y=bar_y,
-    text="2 \u03bcm", text_align="center", text_baseline="bottom",
-    text_color="black", text_font_size="10pt", y_offset=2))
-
-p2.output_backend = "svg"
-export_svgs(p2, filename="../../../figures/Figure_2/2543_OPC_chr1.svg")
-
-# ---- Plot 3: Chromosome arm scatter chr19 ----
-df_cell_chr = df_cell.sort_values('chrom_arm', key=lambda x: x.map({'p': 0, 'q': 1}))
-source = ColumnDataSource(df_cell_chr)
-
-chrom_factors = ['p', 'q']
-color_mapper = factor_cmap('chrom_arm', palette=[palette_hex[1], palette_hex[2]], factors=chrom_factors)
-
-p3 = figure(title="Scatter Plot Colored by Chromosome Arm",
-           background_fill_color="white",
-           border_fill_color="white",
-           x_range=Range1d(start=shared_x_range[0], end=shared_x_range[1]),
-           y_range=Range1d(start=shared_y_range[0], end=shared_y_range[1]),
-           width=plot_size, height=plot_size)
-
-# Plot all non-chr1 first (grey, background)
-for chr_value, color in zip(unique_chrs, palette):
-    if chr_value == 'chr19':
-        continue
-    chr_source = ColumnDataSource(df_cell_chr[df_cell_chr['chromosome_true'] == chr_value])
-    p3.scatter('x', 'y', source=chr_source, size=13, fill_alpha=0.8, color='#CCCCCC')
-
-# Plot chr1 last (on top, colored by arm)
-chr19_df = df_cell_chr[df_cell_chr['chromosome_true'] == 'chr19']
-chr19_source = ColumnDataSource(chr19_df)
-p3.scatter('x', 'y', source=chr19_source, size=13, fill_alpha=0.8, color=color_mapper)
-
-
-p3.xaxis.axis_label = None
-p3.yaxis.axis_label = None
-p3.xgrid.grid_line_color = None
-p3.ygrid.grid_line_color = None
-p3.xaxis.major_label_text_font_size = "0pt"
-p3.yaxis.major_label_text_font_size = "0pt"
-p3.xaxis.major_tick_line_color = None
-p3.xaxis.minor_tick_line_color = None
-p3.yaxis.major_tick_line_color = None
-p3.yaxis.minor_tick_line_color = None
-p3.xaxis.axis_line_color = None
-p3.yaxis.axis_line_color = None
-p3.title.text_color = "white"
-
-p3.line([bar_x_start, bar_x_end], [bar_y, bar_y], line_width=3, line_color="black")
-p3.add_layout(Label(
-    x=(bar_x_start + bar_x_end) / 2, y=bar_y,
-    text="2 \u03bcm", text_align="center", text_baseline="bottom",
-    text_color="black", text_font_size="10pt", y_offset=2))
-
-p3.output_backend = "svg"
-export_svgs(p3, filename="../../../figures/Figure_2/2543_OPC_chr19.svg")
-
-##### Plot Normal Cell ####
-
-# look at 1 cell
-cell = 2057
-
-df_cell = df_1.loc[df_1['matched_label'] == cell].copy()
-
-# drop na for serial and unassigned bins
-df_cell = df_cell[df_cell['chromosome_true'].notna()]
-
-# ---- Shared range computation ----
-
-x_min, x_max = df_cell['x'].min(), df_cell['x'].max()
-y_min, y_max = df_cell['y'].min(), df_cell['y'].max()
-x_span = x_max - x_min
-y_span = y_max - y_min
-max_span = max(x_span, y_span)
-x_center = (x_min + x_max) / 2
-y_center = (y_min + y_max) / 2
-pad = 0.05 * max_span
-
-shared_x_range = (x_center - max_span/2 - pad, x_center + max_span/2 + pad)
-shared_y_range = (y_center - max_span/2 - pad, y_center + max_span/2 + pad)
-
-plot_size = 670
-
-# ---- Plot 1: Chromosome scatter ----
-source = ColumnDataSource(df_cell)
-unique_chrs = df_cell['chromosome_true'].unique()
-palette = palette_hex[:len(unique_chrs)]
-unique_chrs = list(unique_chrs)
-unique_chrs.sort(key=lambda x: x.split('chr')[1])
-unique_chrs_num = unique_chrs[:-2]
-unique_chrs_num.sort(key=lambda x: int(x.split('chr')[1]))
-unique_chrs = unique_chrs_num + [unique_chrs[-2]] + [unique_chrs[-1]]
-
-p = figure(title=f"Scatterplot by Chromosome Cell {cell}",
-           width=plot_size, height=plot_size,
-           background_fill_color="white",
-           border_fill_color="white",
-           x_range=Range1d(start=shared_x_range[0], end=shared_x_range[1]),
-           y_range=Range1d(start=shared_y_range[0], end=shared_y_range[1]))
-
-for chr_value, color in zip(unique_chrs, palette):
-    chr_source = ColumnDataSource(df_cell[df_cell['chromosome_true'] == chr_value])
-    p.scatter('x', 'y', source=chr_source, size=13, fill_alpha=0.8, color=color)
-
-#p.legend.visible = False
-p.xaxis.axis_label = None
-p.yaxis.axis_label = None
-p.xgrid.grid_line_color = None
-p.ygrid.grid_line_color = None
-p.xaxis.major_label_text_font_size = "0pt"
-p.yaxis.major_label_text_font_size = "0pt"
-p.xaxis.major_tick_line_color = None
-p.xaxis.minor_tick_line_color = None
-p.yaxis.major_tick_line_color = None
-p.yaxis.minor_tick_line_color = None
-p.xaxis.axis_line_color = None
-p.yaxis.axis_line_color = None
-p.title.text_color = "white"
-
-scale_bar_length = 2
-bar_x_end = x_max - 0.05 * x_span
-bar_x_start = bar_x_end - scale_bar_length
-bar_y = y_min + 0.05 * y_span
-
-p.line([bar_x_start, bar_x_end], [bar_y, bar_y], line_width=3, line_color="black")
-p.add_layout(Label(
-    x=(bar_x_start + bar_x_end) / 2, y=bar_y,
-    text="2 \u03bcm", text_align="center", text_baseline="bottom",
-    text_color="black", text_font_size="10pt", y_offset=2))
-
-p.output_backend = "svg"
-export_svgs(p, filename="../../../figures/Figure_2/2543_oligNormal_chromosomes.svg")
-
-# ---- Plot 2: Chromosome arm scatter chr1 ----
-df_cell_chr = df_cell.sort_values('chrom_arm', key=lambda x: x.map({'p': 0, 'q': 1}))
-source = ColumnDataSource(df_cell_chr)
-
-chrom_factors = ['p', 'q']
-color_mapper = factor_cmap('chrom_arm', palette=[palette_hex[1], palette_hex[2]], factors=chrom_factors)
-
-p2 = figure(title="Scatter Plot Colored by Chromosome Arm",
-           background_fill_color="white",
-           border_fill_color="white",
-           x_range=Range1d(start=shared_x_range[0], end=shared_x_range[1]),
-           y_range=Range1d(start=shared_y_range[0], end=shared_y_range[1]),
-           width=plot_size, height=plot_size)
-
-# Plot all non-chr1 first (grey, background)
-for chr_value, color in zip(unique_chrs, palette):
-    if chr_value == 'chr1':
-        continue
-    chr_source = ColumnDataSource(df_cell_chr[df_cell_chr['chromosome_true'] == chr_value])
-    p2.scatter('x', 'y', source=chr_source, size=13, fill_alpha=0.8, color='#CCCCCC')
-
-# Plot chr1 last (on top, colored by arm)
-chr1_df = df_cell_chr[df_cell_chr['chromosome_true'] == 'chr1']
-chr1_source = ColumnDataSource(chr1_df)
-p2.scatter('x', 'y', source=chr1_source, size=13, fill_alpha=0.8, color=color_mapper)
-
-
-#p2.legend.visible = False
-p2.xaxis.axis_label = None
-p2.yaxis.axis_label = None
-p2.xgrid.grid_line_color = None
-p2.ygrid.grid_line_color = None
-p2.xaxis.major_label_text_font_size = "0pt"
-p2.yaxis.major_label_text_font_size = "0pt"
-p2.xaxis.major_tick_line_color = None
-p2.xaxis.minor_tick_line_color = None
-p2.yaxis.major_tick_line_color = None
-p2.yaxis.minor_tick_line_color = None
-p2.xaxis.axis_line_color = None
-p2.yaxis.axis_line_color = None
-p2.title.text_color = "white"
-
-p2.line([bar_x_start, bar_x_end], [bar_y, bar_y], line_width=3, line_color="black")
-p2.add_layout(Label(
-    x=(bar_x_start + bar_x_end) / 2, y=bar_y,
-    text="2 \u03bcm", text_align="center", text_baseline="bottom",
-    text_color="black", text_font_size="10pt", y_offset=2))
-
-p2.output_backend = "svg"
-export_svgs(p2, filename="../../../figures/Figure_2/2543_oligNormal_chr1.svg")
-
-# ---- Plot 3: Chromosome arm scatter chr19 ----
-df_cell_chr = df_cell.sort_values('chrom_arm', key=lambda x: x.map({'p': 0, 'q': 1}))
-source = ColumnDataSource(df_cell_chr)
-
-chrom_factors = ['p', 'q']
-color_mapper = factor_cmap('chrom_arm', palette=[palette_hex[1], palette_hex[2]], factors=chrom_factors)
-
-p3 = figure(title="Scatter Plot Colored by Chromosome Arm",
-           background_fill_color="white",
-           border_fill_color="white",
-           x_range=Range1d(start=shared_x_range[0], end=shared_x_range[1]),
-           y_range=Range1d(start=shared_y_range[0], end=shared_y_range[1]),
-           width=plot_size, height=plot_size)
-
-# Plot all non-chr1 first (grey, background)
-for chr_value, color in zip(unique_chrs, palette):
-    if chr_value == 'chr19':
-        continue
-    chr_source = ColumnDataSource(df_cell_chr[df_cell_chr['chromosome_true'] == chr_value])
-    p3.scatter('x', 'y', source=chr_source, size=13, fill_alpha=0.8, color='#CCCCCC')
-
-# Plot chr1 last (on top, colored by arm)
-chr19_df = df_cell_chr[df_cell_chr['chromosome_true'] == 'chr19']
-chr19_source = ColumnDataSource(chr19_df)
-p3.scatter('x', 'y', source=chr19_source, size=13, fill_alpha=0.8, color=color_mapper)
-
-
-p3.xaxis.axis_label = None
-p3.yaxis.axis_label = None
-p3.xgrid.grid_line_color = None
-p3.ygrid.grid_line_color = None
-p3.xaxis.major_label_text_font_size = "0pt"
-p3.yaxis.major_label_text_font_size = "0pt"
-p3.xaxis.major_tick_line_color = None
-p3.xaxis.minor_tick_line_color = None
-p3.yaxis.major_tick_line_color = None
-p3.yaxis.minor_tick_line_color = None
-p3.xaxis.axis_line_color = None
-p3.yaxis.axis_line_color = None
-p3.title.text_color = "white"
-
-p3.line([bar_x_start, bar_x_end], [bar_y, bar_y], line_width=3, line_color="black")
-p3.add_layout(Label(
-    x=(bar_x_start + bar_x_end) / 2, y=bar_y,
-    text="2 \u03bcm", text_align="center", text_baseline="bottom",
-    text_color="black", text_font_size="10pt", y_offset=2))
-
-p3.output_backend = "svg"
-export_svgs(p3, filename="../../../figures/Figure_2/2543_oligNormal_chr19.svg")
 
 ##### Make Legends #####
 
-## Chromosome Legend
+unique_chrs_legend = sort_chromosomes(df_1['chromosome_true'].dropna().unique())
+palette_legend = palette_hex[:len(unique_chrs_legend)]
 
+## Chromosome Legend
 p_legend = figure(width=200, height=600, outline_line_color=None,
                   background_fill_color="white", border_fill_color="white",
                   toolbar_location=None)
 
-# Fix the range and place dummy points outside it
 p_legend.x_range = Range1d(0, 1)
 p_legend.y_range = Range1d(0, 1)
-
 p_legend.xaxis.visible = False
 p_legend.yaxis.visible = False
 p_legend.xgrid.grid_line_color = None
 p_legend.ygrid.grid_line_color = None
 
-for chr_value, color in zip(unique_chrs, palette):
+for chr_value, color in zip(unique_chrs_legend, palette_legend):
     p_legend.scatter([-999], [-999], size=13, fill_alpha=0.8, color=color,
                      legend_label=str(chr_value))
 
@@ -465,19 +254,16 @@ p_legend.legend.label_text_color = "black"
 p_legend.legend.location = "top_left"
 p_legend.legend.border_line_color = None
 p_legend.legend.background_fill_alpha = 0.0
-
 p_legend.output_backend = "svg"
-export_svgs(p_legend, filename="../../../figures/Figure_2/chromosome_legend.svg")
+export_svgs(p_legend, filename=f"{out_dir}/chromosome_legend.svg")
 
 ## Chromosome Arm Legend
-
 p_legend2 = figure(width=200, height=150, outline_line_color=None,
                    background_fill_color="white", border_fill_color="white",
                    toolbar_location=None)
 
 p_legend2.x_range = Range1d(0, 1)
 p_legend2.y_range = Range1d(0, 1)
-
 p_legend2.xaxis.visible = False
 p_legend2.yaxis.visible = False
 p_legend2.xgrid.grid_line_color = None
@@ -494,6 +280,5 @@ p_legend2.legend.label_text_color = "black"
 p_legend2.legend.location = "top_left"
 p_legend2.legend.border_line_color = None
 p_legend2.legend.background_fill_alpha = 0.0
-
 p_legend2.output_backend = "svg"
-export_svgs(p_legend2, filename="../../../figures/Figure_2/chrom_arm_legend.svg")
+export_svgs(p_legend2, filename=f"{out_dir}/chrom_arm_legend.svg")
