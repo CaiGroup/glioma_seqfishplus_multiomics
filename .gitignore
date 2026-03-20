@@ -25,6 +25,7 @@
 *.log
 *.sql
 *.sqlite
+*.pickle
 
 # jupyter checkpoint
 .ipynb_checkpoints
