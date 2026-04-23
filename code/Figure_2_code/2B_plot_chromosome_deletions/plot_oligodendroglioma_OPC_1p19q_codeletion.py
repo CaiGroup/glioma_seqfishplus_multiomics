@@ -3,6 +3,9 @@ import pandas as pd
 import os
 import pickle
 import numpy as np
+import zipfile
+import json
+import tempfile
 
 os.environ["PATH"] = os.path.expanduser("~/miniconda3/envs/fox_env24/bin") + ":" + os.environ["PATH"]
 pd.options.mode.chained_assignment = None
@@ -17,7 +20,7 @@ from scipy.spatial import ConvexHull
 from scipy.interpolate import splprep, splev
 
 palette_hex = [
-    "#73b9a5", "#a33f3e", "#2261b2", "#fea17b", "#c5aedf",
+    "#73b9a5", "#c35653", "#50729f", "#fea17b", "#c5aedf",
     "#d4af9e", "#fea8d4", "#7e5679", "#6ea9fd", "#bd8985",
     "#d36d54", "#e4d177", "#89aeb3", "#fec4a7", "#977d89",
     "#637fd0", "#93581c", "#4bcbfe", "#82e2dd", "#dea257",
@@ -25,19 +28,19 @@ palette_hex = [
     "#a96296", "#769be0", "#aa5839", "#7dcab8", "#847ebb",
     "#f28679", "#286958", "#00838d", "#b9989c", "#de8a5c",
     "#e3c7fe", "#97792d", "#6d6cb7", "#8e586f", "#b9d08a",
-    "#a8a6e3", "#c35653", "#50729f", "#70548b", "#575a99",
+    "#a8a6e3", "#a33f3e", "#2261b2", "#70548b", "#575a99",
     "#b26270", "#a58d39", "#9cc2c8", "#c0af85", "#72999a",
     "#5ebafe", "#59d6ac", "#984649", "#1bb1ca", "#c99b89",
     "#8fe7a1", "#568972", "#6690e7", "#e5b76b", "#798258",
     "#9984aa", "#a9dfc8", "#567319", "#cd8b68", "#979bb7",
     "#b17981", "#bacde7", "#8c6d80", "#576424", "#cfbe91",
     "#b2abca", "#e6bcb3", "#9783cf", "#2e9096", "#bd6c41",
-]
+]      # this is an edited  palette to replace integer positions 1 and 2 with 41 and 42, respectively. to separate chromosome colors from arm colors 
 
 plot_hull = True
-plot_other_chr = False
+plot_other_chr = True
 
-path = '/central/groups/mthomson/sgdata/CaiLab/michalp/Glioma_analysis/data/DNA_data'
+path = '/home/jjfox/resnick_ci2_gbm_/Data/DNA_data/'
 
 # get all files
 files = glob.glob(f"{path}/*assigned.csv")
@@ -50,7 +53,7 @@ files = [i for i in files if patient_id in i]
 df_1 = pd.read_csv(files[0], low_memory=False)
 
 # fix chromosomes
-probe_df = pd.read_csv("/central/groups/CaiLab/personal/jjfox/DNA_seqFISH/human/24-12-19_human_genome_DNA_seqFISH_final_probes.csv")
+probe_df = pd.read_csv("/resnick/groups/CaiLab/jjfox/copied_from_central/DNA_seqFISH/human/24-12-19_human_genome_DNA_seqFISH_final_probes.csv")
 df_unique = probe_df.drop_duplicates(subset='bin_name', keep='last')
 chr_dict = dict(zip(df_unique['bin_name'], df_unique['chr']))
 
@@ -100,19 +103,13 @@ def add_scale_bar(p, bar_x_start, bar_x_end, bar_y):
 
 
 def clean_axes(p):
+    p.title.text = ""
     p.xaxis.axis_label = None
     p.yaxis.axis_label = None
     p.xgrid.grid_line_color = None
     p.ygrid.grid_line_color = None
-    p.xaxis.major_label_text_font_size = "0pt"
-    p.yaxis.major_label_text_font_size = "0pt"
-    p.xaxis.major_tick_line_color = None
-    p.xaxis.minor_tick_line_color = None
-    p.yaxis.major_tick_line_color = None
-    p.yaxis.minor_tick_line_color = None
-    p.xaxis.axis_line_color = None
-    p.yaxis.axis_line_color = None
-    p.title.text_color = "white"
+    p.xaxis.visible = False
+    p.yaxis.visible = False
 
 
 def sort_chromosomes(unique_chrs):
@@ -121,21 +118,6 @@ def sort_chromosomes(unique_chrs):
     unique_chrs_num = unique_chrs[:-2]
     unique_chrs_num.sort(key=lambda x: int(x.split('chr')[1]))
     return unique_chrs_num + [unique_chrs[-2]] + [unique_chrs[-1]]
-
-
-def compute_hull(df_cell, hull_gap=0.15):
-    all_points = np.column_stack([df_cell['x'].values, df_cell['y'].values])
-    hull = ConvexHull(all_points)
-    hull_verts = all_points[hull.vertices]
-    centroid = hull_verts.mean(axis=0)
-    directions = hull_verts - centroid
-    directions = directions / np.linalg.norm(directions, axis=1, keepdims=True)
-    hull_verts_expanded = hull_verts + directions * hull_gap
-    hull_verts_closed = np.vstack([hull_verts_expanded, hull_verts_expanded[0]])
-    tck, u = splprep([hull_verts_closed[:, 0], hull_verts_closed[:, 1]], s=0, per=True, k=3)
-    u_fine = np.linspace(0, 1, 300)
-    hull_xs, hull_ys = splev(u_fine, tck)
-    return list(hull_xs), list(hull_ys)
 
 
 def compute_shared_range(df_cell, pad_frac=0.05):
@@ -152,12 +134,40 @@ def compute_shared_range(df_cell, pad_frac=0.05):
     return shared_x_range, shared_y_range
 
 
-def plot_cell(df_1, cell, label, out_dir, plot_hull=True, plot_other_chr=True, plot_size=670, scale_bar_length=2):
+def plot_cell(df_1, cell, label, out_dir, plot_hull=True, plot_other_chr=True, plot_size=670, scale_bar_length=2, offset=0):
     df_cell = df_1.loc[df_1['matched_label'] == cell].copy()
     df_cell = df_cell[df_cell['chromosome_true'].notna()]
 
     shared_x_range, shared_y_range = compute_shared_range(df_cell)
-    hull_xs, hull_ys = compute_hull(df_cell)
+
+    # get dapi outline
+    if plot_hull:
+        # get DNA cell id
+        dna_cell_id = df_cell['cell'].iloc[0]
+        # pull the nuclei masks for the sample
+        analysis_dir = '/resnick/groups/mthomson/ci2_data/CaiLab/gbm/V2_runs/analysis'
+        geofiles = glob.glob(analysis_dir + f"/*{patient_id}*/roi*{patient_id}/segmentations/segmentation_nuclei.zip")
+        geofile = geofiles[-1]
+        def load_geojson_from_zip(zip_path):
+            with tempfile.TemporaryDirectory() as tmpdir:
+                with zipfile.ZipFile(zip_path, "r") as z:
+                    geojson_files = [f for f in z.namelist() if f.endswith(".geojson")]
+                    if not geojson_files:
+                        raise FileNotFoundError("No .geojson file found in the archive.")
+                    z.extract(geojson_files[0], tmpdir)
+                    with open(os.path.join(tmpdir, geojson_files[0])) as f:
+                        data = json.load(f)
+            return data
+        geojson = load_geojson_from_zip(geofile)
+        # get cell mask
+        cell_mask_data = next(f for f in geojson["features"] if f["id"] == str(dna_cell_id))
+        coords = cell_mask_data["geometry"]["coordinates"][0]
+        xs, ys = zip(*coords)
+        # convert units
+        xs_conv = tuple((x / 9.62)-offset for x in xs)
+        ys_conv = tuple((y / 9.62)-0.2 for y in ys)
+
+    
     bar_x_start, bar_x_end, bar_y = compute_scale_bar(shared_x_range, shared_y_range, scale_bar_length)
 
     unique_chrs = sort_chromosomes(df_cell['chromosome_true'].unique())
@@ -177,7 +187,7 @@ def plot_cell(df_1, cell, label, out_dir, plot_hull=True, plot_other_chr=True, p
         p.scatter('x', 'y', source=chr_source, size=13, fill_alpha=0.8, color=color)
 
     if plot_hull:
-        p.line(hull_xs, hull_ys, line_width=1.5, line_color="black", line_dash="dashed")
+        p.line(xs_conv, ys_conv, line_width=1.5, line_color="black", line_dash="dashed")
     
     clean_axes(p)
     add_scale_bar(p, bar_x_start, bar_x_end, bar_y)
@@ -186,7 +196,7 @@ def plot_cell(df_1, cell, label, out_dir, plot_hull=True, plot_other_chr=True, p
 
     # Plot 2: chr arm scatter
     chrom_factors = ['p', 'q']
-    color_mapper_arms = factor_cmap('chrom_arm', palette=[palette_hex[1], palette_hex[2]], factors=chrom_factors)
+    color_mapper_arms = factor_cmap('chrom_arm', palette=["#a33f3e", "#2261b2"], factors=chrom_factors)
 
     for highlight_chr, plot_label in [('chr1', 'chr1'), ('chr19', 'chr19')]:
         df_cell_chr = df_cell.sort_values('chrom_arm', key=lambda x: x.map({'p': 0, 'q': 1}))
@@ -212,7 +222,7 @@ def plot_cell(df_1, cell, label, out_dir, plot_hull=True, plot_other_chr=True, p
         p_arm.scatter('x', 'y', source=highlight_source, size=13, fill_alpha=0.8, color=color_mapper)
 
         if plot_hull:
-            p_arm.line(hull_xs, hull_ys, line_width=1.5, line_color="black", line_dash="dashed")
+            p_arm.line(xs_conv, ys_conv, line_width=1.5, line_color="black", line_dash="dashed")
 
         clean_axes(p_arm)
         add_scale_bar(p_arm, bar_x_start, bar_x_end, bar_y)
@@ -220,11 +230,11 @@ def plot_cell(df_1, cell, label, out_dir, plot_hull=True, plot_other_chr=True, p
         export_svgs(p_arm, filename=f"{out_dir}/{label}_{plot_label}.svg")
 
 
-os.makedirs("../../../figures/Figure_2/", exist_ok=True)
-out_dir = "../../../figures/Figure_2"
+out_dir = "../../../figures/Figure_2/Figure_2B"
+os.makedirs(out_dir, exist_ok=True)
 
-plot_cell(df_1, cell=7763, label="2543_OPC",        out_dir=out_dir, plot_hull=plot_hull, plot_other_chr=plot_other_chr)
-plot_cell(df_1, cell=2057, label="2543_oligNormal", out_dir=out_dir, plot_hull=plot_hull, plot_other_chr=plot_other_chr)
+plot_cell(df_1, cell=7763, label="2543_OPC",        out_dir=out_dir, plot_hull=plot_hull, plot_other_chr=plot_other_chr, offset = 0.5)
+plot_cell(df_1, cell=2057, label="2543_oligNormal", out_dir=out_dir, plot_hull=plot_hull, plot_other_chr=plot_other_chr, offset = 0.2)
 
 
 ##### Make Legends #####

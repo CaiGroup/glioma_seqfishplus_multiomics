@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#SBATCH --ntasks=1
+#SBATCH --mem=16G
+#SBATCH --cpus-per-task=32
+#SBATCH --time=01:00:00
+#SBATCH --array=0-1
+
+# Set directories for logs
+#SBATCH --output=logs/slurm_out_%j.log
+#SBATCH --error=logs/slurm_err_%j.log
+
+# Create the log directory if it doesn't exist
+mkdir -p logs
+
+pwd; hostname; date
+echo "Starting multicore processing with $SLURM_CPUS_PER_TASK CPUs"
+
+source ~/miniconda3/bin/activate
+conda activate fox_env24
+which python
+
+python 2_aggregate_per_locus.py
+
+date

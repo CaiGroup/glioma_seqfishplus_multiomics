@@ -4,7 +4,7 @@
 #SBATCH --mem=50G
 #SBATCH --cpus-per-task=1
 #SBATCH --time=01:00:00
-#SBATCH --array=0-4
+#SBATCH --array=0-0
 
 # Set directories for logs
 #SBATCH --output=logs/slurm_out_%A_%a.log

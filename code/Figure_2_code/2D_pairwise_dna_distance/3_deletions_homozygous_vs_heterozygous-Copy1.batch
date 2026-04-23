@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#SBATCH --ntasks=1
+#SBATCH --mem=100G
+#SBATCH --cpus-per-task=12
+#SBATCH --time=08:00:00
+#SBATCH --array=1-1
+
+# Set directories for logs
+#SBATCH --output=logs/slurm_out_%A_%a.log
+#SBATCH --error=logs/slurm_err_%A_%a.log
+
+# Create the log directory if it doesn't exist
+mkdir -p logs
+
+pwd; hostname; date
+echo This is task $SLURM_ARRAY_TASK_ID
+
+source ~/miniconda3/bin/activate
+conda activate fox_env24
+which python
+
+python 3_deletions_homozygous_vs_heterozygous-Copy1.py
+
+date

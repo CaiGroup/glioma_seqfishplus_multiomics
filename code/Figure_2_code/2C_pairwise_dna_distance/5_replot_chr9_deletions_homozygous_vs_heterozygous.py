@@ -8,11 +8,11 @@ from matplotlib.colors import TwoSlopeNorm
 import matplotlib.cm as cm
 from scipy.stats import mannwhitneyu, ttest_ind
 
-matplotlib.rcParams['font.family'] = 'Arial'
+#matplotlib.rcParams['font.family'] = 'Arial'
 matplotlib.rcParams['font.size'] = 14
 
 JOB_ID = int(os.getenv('SLURM_ARRAY_TASK_ID', 0))
-sample_list = ['2543', '2683', '5121', '5597', '3883']
+sample_list = ['4555','3557','2543', '2683', '5121', '5597', '3883']
 JOB_SAMPLE = sample_list[JOB_ID]
 
 targets = ['CDKN2A']
