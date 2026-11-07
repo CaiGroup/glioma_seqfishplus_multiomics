@@ -1,0 +1,3 @@
+section,n_tumor,n_olig,n_pairs,n_cross_pairs,cross_fraction,log2_obs_exp
+4970,8976,463,5232,519,0.0991972,-0.266453
+2683,5521,994,8180,1783,0.217971,-0.0899818

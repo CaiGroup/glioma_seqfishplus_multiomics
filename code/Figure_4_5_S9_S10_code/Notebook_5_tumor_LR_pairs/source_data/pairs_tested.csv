@@ -1,0 +1,162 @@
+pair_id,source,gene_1,target,gene_2,tumor_gene,tumor_gene_role,direction,tumor_gene_bh,partner_celltype,partner_gene,partner_p,mt_mean,stable_mean,n_MT,n_stable,p_mannwhitney,p_bh,MT_patients_cells_ge_100,stable_patients_cells_ge_100
+001,Endothelial,ENPP2,tumor,LPAR1,LPAR1,receptor,higher_in_high_risk,0.00189704,Endothelial,ENPP2,0.000610352,0.0936863,0.015389,8,7,0.0003108,0.00705517,8,7
+002,Microglia,ENPP2,tumor,LPAR1,LPAR1,receptor,higher_in_high_risk,0.00189704,Microglia,ENPP2,0.000305176,0.07486,0.00770424,8,7,0.0003108,0.00705517,8,7
+004,Olig. normal,ENPP2,tumor,LPAR1,LPAR1,receptor,higher_in_high_risk,0.00189704,Olig. normal,ENPP2,0.00012207,0.302576,0.0591857,8,7,0.0003108,0.00705517,7,6
+006,tumor,ENPP2,Microglia,LPAR1,ENPP2,ligand,higher_in_high_risk,0.00189704,Microglia,LPAR1,0.00012207,0.0858453,0.0144573,8,7,0.0003108,0.00705517,8,7
+008,tumor,ENPP2,Olig. normal,LPAR1,ENPP2,ligand,higher_in_high_risk,0.00189704,Olig. normal,LPAR1,0.00012207,0.17704,0.0518183,8,7,0.0003108,0.00705517,7,6
+010,tumor,ENPP2,tumor,LPAR1,ENPP2,ligand,higher_in_high_risk,0.00189704,tumor,LPAR1,6.10352e-05,0.0717267,0.00678894,8,7,0.0003108,0.00705517,8,7
+013,tumor,ENPP2,Endothelial,LPAR1,ENPP2,ligand,higher_in_high_risk,0.00189704,Endothelial,LPAR1,0.00671387,0.0560802,0.00722405,8,7,0.00144578,0.0252456,8,7
+014,tumor,LIPH,tumor,LPAR1,LPAR1,receptor,higher_in_high_risk,0.00189704,tumor,LIPH,0.0131504,0.0096759,0.00108559,8,7,0.00214402,0.0347638,8,7
+015,tumor,PROC,Olig. normal,TEK,PROC,ligand,higher_in_high_risk,0.0462431,Olig. normal,TEK,0.00713241,0.00295872,0.000273746,8,7,0.0101979,0.151182,7,6
+016,tumor,BTLA,Olig. normal,CD79A,BTLA,ligand,higher_in_high_risk,0.0197278,Olig. normal,CD79A,0.0330469,0.00304514,0.000338479,8,7,0.0112833,0.151182,7,6
+017,Microglia,CLDN11,tumor,CLDN11,CLDN11,receptor,higher_in_high_risk,0.00189704,Microglia,CLDN11,0.00115967,0.0642394,0.0194425,8,7,0.013986,0.151182,8,7
+019,tumor,CLDN11,Microglia,CLDN11,CLDN11,ligand,higher_in_high_risk,0.00189704,Microglia,CLDN11,0.00115967,0.0642394,0.0194425,8,7,0.013986,0.151182,8,7
+020,tumor,CD244,tumor,CD79B,CD244,ligand,higher_in_high_risk,0.0462431,tumor,CD79B,0.0353394,0.00770832,0.000720106,8,7,0.013986,0.151182,8,7
+021,tumor,CD79B,tumor,CD244,CD244,receptor,higher_in_high_risk,0.0462431,tumor,CD79B,0.0353394,0.00770832,0.000720106,8,7,0.013986,0.151182,8,7
+022,tumor,HMGB1,Microglia,CXCR4,HMGB1,ligand,higher_in_high_risk,0.0102586,Microglia,CXCR4,0.00115967,0.0740749,0.0121466,8,7,0.0205128,0.188203,8,7
+023,tumor,HMGB1,Microglia,HAVCR2,HMGB1,ligand,higher_in_high_risk,0.0102586,Microglia,HAVCR2,0.00335693,0.198224,0.0465096,8,7,0.0205128,0.188203,8,7
+027,tumor,CCN2,Microglia,ITGAM,CCN2,ligand,higher_in_high_risk,0.0462431,Microglia,ITGAM,0.0215454,0.0796773,0.0421643,8,7,0.0289044,0.234332,8,7
+028,tumor,DLL1,tumor,NOTCH1,DLL1,ligand,higher_in_high_risk,0.00918379,tumor,NOTCH1,0.0353394,0.494082,0.278508,8,7,0.0289044,0.234332,8,7
+029,Microglia,C3,tumor,CR2,CR2,receptor,higher_in_high_risk,0.00918379,Microglia,C3,0.00671387,0.0579795,0.00494291,8,7,0.0400932,0.242085,8,7
+030,tumor,ADAM10,Endothelial,APP,ADAM10,ligand,higher_in_high_risk,0.0462431,Endothelial,APP,0.0180664,0.349601,0.196627,8,7,0.0400932,0.242085,8,7
+031,tumor,HMGB1,Olig. normal,HAVCR2,HMGB1,ligand,higher_in_high_risk,0.0102586,Olig. normal,HAVCR2,0.00012207,0.0651861,0.0113478,8,7,0.0400932,0.242085,7,6
+032,tumor,BTLA,tumor,CD276,BTLA,ligand,higher_in_high_risk,0.0197278,tumor,CD276,0.0479126,0.0109682,0.00288134,8,7,0.0400932,0.242085,8,7
+033,tumor,HMGB1,tumor,CD163,HMGB1,ligand,higher_in_high_risk,0.0102586,tumor,CD163,0.0124512,0.0169649,0.0015761,8,7,0.0400932,0.242085,8,7
+034,tumor,HMGB1,tumor,HAVCR2,HAVCR2,receptor,higher_in_high_risk,0.0254577,tumor,HMGB1,0.00115967,0.0567497,0.00868306,8,7,0.0400932,0.242085,8,7
+036,tumor,BTLA,tumor,CD79A,BTLA,ligand,higher_in_high_risk,0.0197278,tumor,CD79A,0.0185667,0.00201435,0.000553476,8,7,0.0421027,0.242085,8,7
+037,Microglia,TNFRSF14,tumor,BTLA,BTLA,receptor,higher_in_high_risk,0.0197278,Microglia,TNFRSF14,0.0150757,0.00923565,0.00170468,8,7,0.0426581,0.242085,8,7
+039,tumor,BTLA,Microglia,TNFRSF14,BTLA,ligand,higher_in_high_risk,0.0197278,Microglia,TNFRSF14,0.0150757,0.00923565,0.00170468,8,7,0.0426581,0.242085,8,7
+041,Endothelial,VIP,tumor,VIPR2,VIPR2,receptor,higher_in_high_risk,0.0304274,Endothelial,VIP,0.0413269,0.0202571,0.0076182,8,7,0.0489385,0.266869,8,7
+042,Endothelial,CLDN11,tumor,CLDN11,CLDN11,receptor,higher_in_high_risk,0.00189704,Endothelial,CLDN11,0.00836182,0.0594447,0.0160755,8,7,0.0540793,0.266869,8,7
+043,Olig. normal,CLDN11,tumor,CLDN11,CLDN11,receptor,higher_in_high_risk,0.00189704,Olig. normal,CLDN11,0.00012207,0.237222,0.114896,8,7,0.0540793,0.266869,7,6
+044,tumor,CLDN11,Endothelial,CLDN11,CLDN11,ligand,higher_in_high_risk,0.00189704,Endothelial,CLDN11,0.00836182,0.0594447,0.0160755,8,7,0.0540793,0.266869,8,7
+045,tumor,CLDN11,Olig. normal,CLDN11,CLDN11,ligand,higher_in_high_risk,0.00189704,Olig. normal,CLDN11,0.00012207,0.237222,0.114896,8,7,0.0540793,0.266869,7,6
+046,tumor,HMGB1,tumor,TLR2,HMGB1,ligand,higher_in_high_risk,0.0102586,tumor,TLR2,0.0353394,0.0206727,0.0037657,8,7,0.0540793,0.266869,8,7
+047,tumor,ADAM10,tumor,APP,ADAM10,ligand,higher_in_high_risk,0.0462431,tumor,APP,0.00671387,0.327965,0.183078,8,7,0.0721057,0.341,8,7
+048,tumor,ADAM10,tumor,NOTCH1,ADAM10,ligand,higher_in_high_risk,0.0462431,tumor,NOTCH1,0.0353394,0.279667,0.142589,8,7,0.0721057,0.341,8,7
+050,Endothelial,SIGLEC1,tumor,SPN,SPN,receptor,higher_in_high_risk,0.00918379,Endothelial,SIGLEC1,6.10352e-05,0.0161796,0.00157177,8,7,0.0904107,0.367355,8,7
+051,tumor,SPN,Endothelial,SIGLEC1,SPN,ligand,higher_in_high_risk,0.00918379,Endothelial,SIGLEC1,6.10352e-05,0.0161796,0.00157177,8,7,0.0904107,0.367355,8,7
+053,Microglia,SERPINE1,tumor,PLAU,PLAU,receptor,higher_in_high_risk,0.0407461,Microglia,SERPINE1,0.0412598,0.00908614,0.00370285,8,7,0.0930451,0.367355,8,7
+054,Microglia,HMGB1,tumor,HAVCR2,HAVCR2,receptor,higher_in_high_risk,0.0254577,Microglia,HMGB1,0.0150757,0.0509874,0.00996524,8,7,0.0938617,0.367355,8,7
+055,Olig. normal,HMGB1,tumor,HAVCR2,HAVCR2,receptor,higher_in_high_risk,0.0254577,Olig. normal,HMGB1,0.0134277,0.0455359,0.00944653,8,7,0.0938617,0.367355,7,6
+058,tumor,VCAN,tumor,SELPLG,SELPLG,receptor,higher_in_high_risk,0.0127157,tumor,VCAN,0.0353394,0.160351,0.102969,8,7,0.0938617,0.367355,8,7
+060,tumor,CD244,AC,CSF3R,CD244,ligand,higher_in_high_risk,0.0462431,AC,CSF3R,0.03125,0.0198575,0.00244731,8,6,0.105043,0.38555,7,5
+062,tumor,ADAM10,AC,APP,ADAM10,ligand,higher_in_high_risk,0.0462431,AC,APP,0.03125,0.366882,0.222681,8,6,0.107892,0.38555,7,5
+063,tumor,PROC,tumor,THBD,PROC,ligand,higher_in_high_risk,0.0462431,tumor,THBD,0.0412598,0.00225497,0.00144902,8,7,0.117884,0.38555,8,7
+064,Endothelial,GDF9,tumor,FXYD6,FXYD6,receptor,higher_in_high_risk,0.0355804,Endothelial,GDF9,0.0124512,0.048372,0.037343,8,7,0.120591,0.38555,8,7
+065,Microglia,PTPRC,tumor,MRC1,MRC1,receptor,higher_in_high_risk,0.0102586,Microglia,PTPRC,0.0479126,0.0535088,0.0147496,8,7,0.120591,0.38555,8,7
+066,tumor,CD244,Microglia,CSF3R,CD244,ligand,higher_in_high_risk,0.0462431,Microglia,CSF3R,0.000427246,0.0601794,0.0192353,8,7,0.120591,0.38555,8,7
+067,tumor,DLL1,Olig. normal,NOTCH1,DLL1,ligand,higher_in_high_risk,0.00918379,Olig. normal,NOTCH1,0.00305176,0.374534,0.208931,8,7,0.120591,0.38555,7,6
+068,tumor,BMP2,tumor,ENG,BMP2,ligand,higher_in_high_risk,0.00286492,tumor,ENG,0.000610352,0.0595508,0.0202499,8,7,0.120591,0.38555,8,7
+069,tumor,CEACAM1,tumor,HAVCR2,HAVCR2,receptor,higher_in_high_risk,0.0254577,tumor,CEACAM1,0.0303273,0.0186482,0.00137013,8,7,0.120591,0.38555,8,7
+070,tumor,CLDN11,tumor,CLDN11,CLDN11,ligand,higher_in_high_risk,0.00189704,tumor,CLDN11,6.10352e-05,0.0940446,0.0515744,8,7,0.120591,0.38555,8,7
+071,tumor,HMGB1,tumor,THBD,HMGB1,ligand,higher_in_high_risk,0.0102586,tumor,THBD,0.0412598,0.0247454,0.00330304,8,7,0.120591,0.38555,8,7
+072,tumor,CXCL9,Endothelial,DPP4,CXCL9,ligand,higher_in_high_risk,0.00918379,Endothelial,DPP4,0.0412598,0.00556782,0.00225862,8,7,0.146561,0.420729,8,7
+073,tumor,BTLA,Microglia,CD276,BTLA,ligand,higher_in_high_risk,0.0197278,Microglia,CD276,0.0255737,0.0149173,0.00486536,8,7,0.147649,0.420729,8,7
+074,Endothelial,TGFB3,tumor,ENG,ENG,receptor,higher_in_high_risk,0.0073115,Endothelial,TGFB3,0.0412598,0.039573,0.0183875,8,7,0.151981,0.420729,8,7
+075,Microglia,TGFB1,tumor,ENG,ENG,receptor,higher_in_high_risk,0.0073115,Microglia,TGFB1,0.00152588,0.0957355,0.0548722,8,7,0.151981,0.420729,8,7
+076,Olig. normal,CSF1,tumor,CSF3R,CSF3R,receptor,higher_in_high_risk,0.0181819,Olig. normal,CSF1,0.0494385,0.0384452,0.0185797,8,7,0.151981,0.420729,7,6
+077,tumor,ADAM10,Microglia,AXL,ADAM10,ligand,higher_in_high_risk,0.0462431,Microglia,AXL,0.0412598,0.267349,0.140883,8,7,0.151981,0.420729,8,7
+078,tumor,ADAM10,Olig. normal,APP,ADAM10,ligand,higher_in_high_risk,0.0462431,Olig. normal,APP,0.00012207,0.329654,0.189252,8,7,0.151981,0.420729,7,6
+079,tumor,ADAM10,Olig. normal,NOTCH1,ADAM10,ligand,higher_in_high_risk,0.0462431,Olig. normal,NOTCH1,0.00305176,0.213751,0.106121,8,7,0.151981,0.420729,7,6
+081,tumor,C3,tumor,CR2,CR2,receptor,higher_in_high_risk,0.00918379,tumor,C3,0.0255737,0.0383698,0.00274143,8,7,0.151981,0.420729,8,7
+082,tumor,PLAU,tumor,LRP2,PLAU,ligand,higher_in_high_risk,0.0407461,tumor,LRP2,0.0412598,0.00318079,0.00131217,8,7,0.151981,0.420729,8,7
+086,Endothelial,CD274,tumor,PDCD1,PDCD1,receptor,higher_in_high_risk,0.00189704,Endothelial,CD274,0.0353394,0.00271466,0.00589828,8,7,0.181665,0.447562,8,7
+090,Olig. normal,ADAM10,tumor,APP,APP,receptor,higher_in_high_risk,0.0355804,Olig. normal,ADAM10,0.000366211,0.369022,0.253921,8,7,0.189277,0.447562,7,6
+091,Olig. normal,BMP2,tumor,ENG,ENG,receptor,higher_in_high_risk,0.0073115,Olig. normal,BMP2,0.0166016,0.0294429,0.00664599,8,7,0.189277,0.447562,7,6
+092,tumor,ADAM10,Microglia,APP,ADAM10,ligand,higher_in_high_risk,0.0462431,Microglia,APP,0.0353394,0.302796,0.185772,8,7,0.189277,0.447562,8,7
+093,tumor,CCN2,Microglia,ITGB2,CCN2,ligand,higher_in_high_risk,0.0462431,Microglia,ITGB2,0.00836182,0.110588,0.0687014,8,7,0.189277,0.447562,8,7
+094,tumor,PROC,Microglia,ITGAM,PROC,ligand,higher_in_high_risk,0.0462431,Microglia,ITGAM,0.0215454,0.0257061,0.0164075,8,7,0.189277,0.447562,8,7
+096,tumor,DLL3,Olig. normal,NOTCH1,DLL3,ligand,higher_in_high_risk,0.00189704,Olig. normal,NOTCH1,0.00305176,0.382689,0.226098,8,7,0.189277,0.447562,7,6
+098,Microglia,BMP2,tumor,ENG,ENG,receptor,higher_in_high_risk,0.0073115,Microglia,BMP2,0.0102539,0.0253705,0.00716163,8,7,0.202614,0.466201,8,7
+104,AC,CNTN4,tumor,APP,APP,receptor,higher_in_high_risk,0.0355804,AC,CNTN4,0.03125,0.0470406,0.0306363,8,6,0.228438,0.474158,7,5
+105,Endothelial,CNTN2,tumor,CNTN2,CNTN2,receptor,higher_in_high_risk,0.00286492,Endothelial,CNTN2,0.000183105,0.0363331,0.0257204,8,7,0.231857,0.474158,8,7
+106,Microglia,CNTN2,tumor,CNTN2,CNTN2,receptor,higher_in_high_risk,0.00286492,Microglia,CNTN2,0.000183105,0.0466306,0.0325684,8,7,0.231857,0.474158,8,7
+107,tumor,CNTN2,Endothelial,CNTN2,CNTN2,ligand,higher_in_high_risk,0.00286492,Endothelial,CNTN2,0.000183105,0.0363331,0.0257204,8,7,0.231857,0.474158,8,7
+108,tumor,CNTN2,Microglia,CNTN2,CNTN2,ligand,higher_in_high_risk,0.00286492,Microglia,CNTN2,0.000183105,0.0466306,0.0325684,8,7,0.231857,0.474158,8,7
+109,tumor,PROC,Microglia,ITGB2,PROC,ligand,higher_in_high_risk,0.0462431,Microglia,ITGB2,0.00836182,0.0355475,0.0228771,8,7,0.231857,0.474158,8,7
+110,tumor,DLL3,tumor,NOTCH1,DLL3,ligand,higher_in_high_risk,0.00189704,tumor,NOTCH1,0.0353394,0.505037,0.343301,8,7,0.231857,0.474158,8,7
+111,tumor,SPP1,tumor,ITGB1,SPP1,ligand,higher_in_high_risk,0.00286492,tumor,ITGB1,0.0150757,0.116168,0.0567207,8,7,0.231857,0.474158,8,7
+113,tumor,APP,Microglia,SORL1,APP,ligand,higher_in_high_risk,0.0355804,Microglia,SORL1,0.00836182,0.812968,0.731893,8,7,0.280963,0.545117,8,7
+114,tumor,BMP2,Microglia,ENG,BMP2,ligand,higher_in_high_risk,0.00286492,Microglia,ENG,0.0412598,0.239917,0.128729,8,7,0.280963,0.545117,8,7
+115,tumor,ENG,Olig. normal,ITGAV,ENG,ligand,higher_in_high_risk,0.0073115,Olig. normal,ITGAV,0.00305176,0.0608102,0.0284337,8,7,0.280963,0.545117,7,6
+116,tumor,THY1,Olig. normal,ITGAV,THY1,ligand,higher_in_high_risk,0.0407461,Olig. normal,ITGAV,0.00305176,0.217072,0.14672,8,7,0.280963,0.545117,7,6
+117,tumor,TGFB1,tumor,ENG,ENG,receptor,higher_in_high_risk,0.0073115,tumor,TGFB1,0.0124512,0.0458252,0.0186349,8,7,0.280963,0.545117,8,7
+118,Endothelial,CSF3,tumor,CSF3R,CSF3R,receptor,higher_in_high_risk,0.0181819,Endothelial,CSF3,0.0180664,0.00553001,0.00260477,8,7,0.293271,0.564173,8,7
+119,Endothelial,TNFSF9,tumor,PVR,PVR,receptor,higher_in_high_risk,0.0215669,Endothelial,TNFSF9,0.0180664,0.00598597,0.00466464,8,7,0.323537,0.581647,8,7
+120,Endothelial,MAG,tumor,MAG,MAG,receptor,higher_in_high_risk,0.00189704,Endothelial,MAG,6.10352e-05,0.036223,0.0263558,8,7,0.324839,0.581647,8,7
+122,tumor,MAG,Endothelial,MAG,MAG,ligand,higher_in_high_risk,0.00189704,Endothelial,MAG,6.10352e-05,0.036223,0.0263558,8,7,0.324839,0.581647,8,7
+124,Endothelial,THY1,tumor,ITGAX,ITGAX,receptor,higher_in_high_risk,0.0102586,Endothelial,THY1,0.0479126,0.0416231,0.025216,8,7,0.335664,0.581647,8,7
+125,Microglia,LTBP1,tumor,ITGB5,ITGB5,receptor,lower_in_high_risk,0.0304274,Microglia,LTBP1,0.0412598,0.0250655,0.0142774,8,7,0.335664,0.581647,8,7
+126,Microglia,MAG,tumor,MAG,MAG,receptor,higher_in_high_risk,0.00189704,Microglia,MAG,0.000183105,0.0394242,0.0323227,8,7,0.335664,0.581647,8,7
+128,tumor,MAG,Microglia,MAG,MAG,ligand,higher_in_high_risk,0.00189704,Microglia,MAG,0.000183105,0.0394242,0.0323227,8,7,0.335664,0.581647,8,7
+129,tumor,PDGFA,Microglia,PDGFRA,PDGFA,ligand,higher_in_high_risk,0.00189704,Microglia,PDGFRA,0.0301514,0.0357191,0.0167904,8,7,0.335664,0.581647,8,7
+130,tumor,THY1,Microglia,ITGAX,THY1,ligand,higher_in_high_risk,0.0407461,Microglia,ITGAX,0.000854492,0.349573,0.264404,8,7,0.335664,0.581647,8,7
+131,tumor,CNTN2,tumor,CNTN2,CNTN2,ligand,higher_in_high_risk,0.00286492,tumor,CNTN2,0.00012207,0.0787363,0.0815374,8,7,0.335664,0.581647,8,7
+133,Microglia,ITGB2,tumor,THY1,THY1,receptor,higher_in_high_risk,0.0407461,Microglia,ITGB2,0.00836182,0.317703,0.26644,8,7,0.396892,0.648162,8,7
+134,Microglia,TGFB1,tumor,APP,APP,receptor,higher_in_high_risk,0.0355804,Microglia,TGFB1,0.00152588,0.783423,0.663413,8,7,0.396892,0.648162,8,7
+135,Olig. normal,CNTN2,tumor,CNTN2,CNTN2,receptor,higher_in_high_risk,0.00286492,Olig. normal,CNTN2,0.00012207,0.197708,0.175697,8,7,0.396892,0.648162,7,6
+136,tumor,THY1,Microglia,ITGB2,THY1,ligand,higher_in_high_risk,0.0407461,Microglia,ITGB2,0.00836182,0.317703,0.26644,8,7,0.396892,0.648162,8,7
+137,tumor,CNTN2,Olig. normal,CNTN2,CNTN2,ligand,higher_in_high_risk,0.00286492,Olig. normal,CNTN2,0.00012207,0.197708,0.175697,8,7,0.396892,0.648162,7,6
+138,tumor,CD244,tumor,CSF3R,CD244,ligand,higher_in_high_risk,0.0462431,tumor,CSF3R,0.00262451,0.0156115,0.0017583,8,7,0.396892,0.648162,8,7
+139,tumor,MAG,tumor,MAG,MAG,ligand,higher_in_high_risk,0.00189704,tumor,MAG,6.10352e-05,0.0616174,0.0615447,8,7,0.396892,0.648162,8,7
+143,tumor,CXCL9,tumor,CXCR3,CXCL9,ligand,higher_in_high_risk,0.00918379,tumor,CXCR3,0.0353394,0.00261621,0.000876406,8,7,0.451509,0.692056,8,7
+144,Olig. normal,MAG,tumor,MAG,MAG,receptor,higher_in_high_risk,0.00189704,Olig. normal,MAG,0.00012207,0.186282,0.163928,8,7,0.463403,0.692056,7,6
+145,tumor,THY1,Microglia,ITGAM,THY1,ligand,higher_in_high_risk,0.0407461,Microglia,ITGAM,0.0215454,0.221782,0.187407,8,7,0.463403,0.692056,8,7
+146,tumor,EFEMP1,Olig. normal,EGFR,EFEMP1,ligand,lower_in_high_risk,0.0462431,Olig. normal,EGFR,0.00524902,0.169582,0.185528,8,7,0.463403,0.692056,7,6
+147,tumor,MAG,Olig. normal,MAG,MAG,ligand,higher_in_high_risk,0.00189704,Olig. normal,MAG,0.00012207,0.186282,0.163928,8,7,0.463403,0.692056,7,6
+148,tumor,CLEC11A,tumor,ITGB1,CLEC11A,ligand,higher_in_high_risk,0.0254577,tumor,ITGB1,0.0150757,0.0276225,0.0113641,8,7,0.463403,0.692056,8,7
+149,tumor,ICAM2,tumor,ITGAL,ICAM2,ligand,higher_in_high_risk,0.003569,tumor,ITGAL,0.0215454,0.00180179,0.00105575,8,7,0.463403,0.692056,8,7
+150,tumor,IL16,tumor,CD4,IL16,ligand,higher_in_high_risk,0.0407461,tumor,CD4,0.0215454,0.0081454,0.00359833,8,7,0.463403,0.692056,8,7
+151,tumor,TGFB1,tumor,APP,APP,receptor,higher_in_high_risk,0.0355804,tumor,TGFB1,0.0124512,0.330585,0.220829,8,7,0.463403,0.692056,8,7
+152,tumor,THY1,tumor,ITGAX,ITGAX,receptor,higher_in_high_risk,0.0102586,tumor,THY1,0.00836182,0.0714199,0.0423171,8,7,0.463403,0.692056,8,7
+153,AC,THY1,tumor,ITGAX,ITGAX,receptor,higher_in_high_risk,0.0102586,AC,THY1,0.03125,0.0506815,0.0289305,8,6,0.490842,0.728243,7,5
+154,tumor,SERPINE1,tumor,PLAU,PLAU,receptor,higher_in_high_risk,0.0407461,tumor,SERPINE1,0.0412598,0.00260674,0.000768617,8,7,0.522962,0.770859,8,7
+155,tumor,ICAM2,Microglia,ITGB2,ICAM2,ligand,higher_in_high_risk,0.003569,Microglia,ITGB2,0.00836182,0.0298871,0.022449,8,7,0.53582,0.77472,8,7
+157,tumor,CCN2,Olig. normal,ERBB4,CCN2,ligand,higher_in_high_risk,0.0462431,Olig. normal,ERBB4,0.0107422,0.018001,0.0111334,8,7,0.53582,0.77472,7,6
+158,Olig. normal,CXCL11,tumor,CCR5,CCR5,receptor,higher_in_high_risk,0.0462431,Olig. normal,CXCL11,0.0463995,0.00317408,0.0024974,8,7,0.559305,0.803044,7,6
+159,tumor,CD48,tumor,CD244,CD244,receptor,higher_in_high_risk,0.0462431,tumor,CD48,0.0255737,0.00658977,0.00121504,8,7,0.562485,0.803044,8,7
+160,tumor,VTN,tumor,PVR,PVR,receptor,higher_in_high_risk,0.0215669,tumor,VTN,0.0479897,0.00710824,0.00762236,8,7,0.6022,0.808473,8,7
+161,Microglia,C3,tumor,ITGAX,ITGAX,receptor,higher_in_high_risk,0.0102586,Microglia,C3,0.00671387,0.155848,0.116299,8,7,0.612587,0.808473,8,7
+162,Microglia,CD274,tumor,PDCD1,PDCD1,receptor,higher_in_high_risk,0.00189704,Microglia,CD274,0.00427246,0.00494169,0.00764716,8,7,0.612587,0.808473,8,7
+163,Microglia,CXCL16,tumor,CXCR6,CXCR6,receptor,higher_in_high_risk,0.0073115,Microglia,CXCL16,0.0412598,0.0603673,0.039219,8,7,0.612587,0.808473,8,7
+165,Olig. normal,BGN,tumor,FGFR3,FGFR3,receptor,lower_in_high_risk,0.00918379,Olig. normal,BGN,0.00854492,0.0917146,0.12096,8,7,0.612587,0.808473,7,6
+166,tumor,ICAM2,Microglia,ITGAL,ICAM2,ligand,higher_in_high_risk,0.003569,Microglia,ITGAL,0.00201416,0.00933298,0.00642791,8,7,0.612587,0.808473,8,7
+167,tumor,ICAM2,Microglia,ITGAM,ICAM2,ligand,higher_in_high_risk,0.003569,Microglia,ITGAM,0.0215454,0.0188746,0.0141209,8,7,0.612587,0.808473,8,7
+168,tumor,PDGFB,Microglia,PDGFRA,PDGFB,ligand,higher_in_high_risk,0.0181819,Microglia,PDGFRA,0.0301514,0.0184799,0.00748349,8,7,0.612587,0.808473,8,7
+170,tumor,SPP1,Olig. normal,ITGB1,SPP1,ligand,higher_in_high_risk,0.00286492,Olig. normal,ITGB1,0.000854492,0.12005,0.0824168,8,7,0.612587,0.808473,7,6
+171,tumor,C3,tumor,ITGAX,ITGAX,receptor,higher_in_high_risk,0.0102586,tumor,C3,0.0255737,0.0861887,0.0624531,8,7,0.612587,0.808473,8,7
+172,tumor,ICAM1,tumor,SPN,SPN,receptor,higher_in_high_risk,0.00918379,tumor,ICAM1,0.0479126,0.0239932,0.00229891,8,7,0.612587,0.808473,8,7
+175,tumor,IL16,AC,GRIN2A,IL16,ligand,higher_in_high_risk,0.0407461,AC,GRIN2A,0.03125,0.00879104,0.00672904,8,6,0.662005,0.812435,7,5
+179,tumor,SFRP1,Microglia,FZD6,SFRP1,ligand,higher_in_high_risk,0.0154419,Microglia,FZD6,0.00671387,0.00212892,0.00165795,8,7,0.684375,0.812435,8,7
+180,tumor,CXCL8,Olig. normal,CXCR1,CXCL8,ligand,higher_in_high_risk,0.0462431,Olig. normal,CXCR1,0.0192234,0.00165618,0.00114576,8,7,0.684375,0.812435,7,6
+181,Endothelial,CSF3,tumor,CSF1R,CSF1R,receptor,higher_in_high_risk,0.00494299,Endothelial,CSF3,0.0180664,0.00756748,0.00670117,8,7,0.685177,0.812435,8,7
+182,Olig. normal,VIP,tumor,VIPR2,VIPR2,receptor,higher_in_high_risk,0.0304274,Olig. normal,VIP,0.00713241,0.00921792,0.00558591,8,7,0.685177,0.812435,7,6
+183,Endothelial,APP,tumor,CD74,CD74,receptor,higher_in_high_risk,0.00599187,Endothelial,APP,0.0180664,0.571664,0.549529,8,7,0.694328,0.812435,8,7
+190,tumor,CLEC11A,Olig. normal,ITGB1,CLEC11A,ligand,higher_in_high_risk,0.0254577,Olig. normal,ITGB1,0.000854492,0.0266514,0.0117008,8,7,0.694328,0.812435,7,6
+191,tumor,PDGFA,Olig. normal,PDGFRA,PDGFA,ligand,higher_in_high_risk,0.00189704,Olig. normal,PDGFRA,0.0245361,0.0338132,0.0228326,8,7,0.694328,0.812435,7,6
+192,tumor,PDGFB,Olig. normal,PDGFRA,PDGFB,ligand,higher_in_high_risk,0.0181819,Olig. normal,PDGFRA,0.0245361,0.014507,0.00898504,8,7,0.694328,0.812435,7,6
+193,tumor,PLAU,Olig. normal,LRP2,PLAU,ligand,higher_in_high_risk,0.0407461,Olig. normal,LRP2,0.000244141,0.0168806,0.0099165,8,7,0.694328,0.812435,7,6
+194,tumor,APP,tumor,CD74,APP,ligand,higher_in_high_risk,0.0355804,tumor,CD74,0.000427246,0.54662,0.518317,8,7,0.694328,0.812435,8,7
+195,AC,APP,tumor,CD74,CD74,receptor,higher_in_high_risk,0.00599187,AC,APP,0.03125,0.538731,0.556563,8,6,0.754579,0.869489,7,5
+198,Endothelial,SPARC,tumor,FGFR1,FGFR1,receptor,lower_in_high_risk,0.0127157,Endothelial,SPARC,0.0180664,0.328519,0.364902,8,7,0.778866,0.87526,8,7
+199,Olig. normal,CSF1,tumor,CSF1R,CSF1R,receptor,higher_in_high_risk,0.00494299,Olig. normal,CSF1,0.0494385,0.0609482,0.0506143,8,7,0.778866,0.87526,7,6
+200,tumor,APP,Microglia,CD74,APP,ligand,higher_in_high_risk,0.0355804,Microglia,CD74,0.0150757,0.941411,0.892686,8,7,0.778866,0.87526,8,7
+202,tumor,APP,Olig. normal,NGFR,APP,ligand,higher_in_high_risk,0.0355804,Olig. normal,NGFR,0.029541,0.101434,0.132456,8,7,0.778866,0.87526,7,6
+203,Endothelial,CCK,tumor,CCKAR,CCKAR,receptor,higher_in_high_risk,0.0354454,Endothelial,CCK,0.0215454,0.00495216,0.00387459,8,7,0.81107,0.90696,8,7
+205,tumor,SFRP1,Microglia,FZD2,SFRP1,ligand,higher_in_high_risk,0.0154419,Microglia,FZD2,0.0102539,0.00635694,0.0050864,8,7,0.866511,0.941139,8,7
+207,tumor,SPP1,Olig. normal,ITGAV,SPP1,ligand,higher_in_high_risk,0.00286492,Olig. normal,ITGAV,0.00305176,0.19046,0.170983,8,7,0.866511,0.941139,7,6
+208,tumor,CD48,tumor,PDCD1,PDCD1,receptor,higher_in_high_risk,0.00189704,tumor,CD48,0.0255737,0.00248481,0.00249619,8,7,0.866511,0.941139,8,7
+209,tumor,ICAM1,tumor,ITGAX,ITGAX,receptor,higher_in_high_risk,0.0102586,tumor,ICAM1,0.0479126,0.0174461,0.00866942,8,7,0.866511,0.941139,8,7
+211,Microglia,TIGIT,tumor,PVR,PVR,receptor,higher_in_high_risk,0.0215669,Microglia,TIGIT,0.0102539,0.00342187,0.00517016,8,7,0.953692,0.9766,8,7
+212,tumor,PVR,Microglia,TIGIT,PVR,ligand,higher_in_high_risk,0.0215669,Microglia,TIGIT,0.0102539,0.00342187,0.00517016,8,7,0.953692,0.9766,8,7
+213,tumor,CD96,tumor,PVR,PVR,receptor,higher_in_high_risk,0.0215669,tumor,CD96,0.0301514,0.00168426,0.00321586,8,7,0.953692,0.9766,8,7
+214,tumor,PVR,tumor,CD96,PVR,ligand,higher_in_high_risk,0.0215669,tumor,CD96,0.0301514,0.00168426,0.00321586,8,7,0.953692,0.9766,8,7
+215,Microglia,APP,tumor,CD74,CD74,receptor,higher_in_high_risk,0.00599187,Microglia,APP,0.0353394,0.546702,0.548418,8,7,0.955089,0.9766,8,7
+216,Olig. normal,APP,tumor,CD74,CD74,receptor,higher_in_high_risk,0.00599187,Olig. normal,APP,0.00012207,0.565929,0.549531,8,7,0.955089,0.9766,7,6
+217,Olig. normal,ICOSLG,tumor,ICOS,ICOS,receptor,higher_in_high_risk,0.0154419,Olig. normal,ICOSLG,0.000244141,0.0218091,0.0140174,8,7,0.955089,0.9766,7,6
+218,Olig. normal,THY1,tumor,ITGAX,ITGAX,receptor,higher_in_high_risk,0.0102586,Olig. normal,THY1,0.0352783,0.0417384,0.0375576,8,7,0.955089,0.9766,7,6
+222,tumor,CD274,tumor,PDCD1,PDCD1,receptor,higher_in_high_risk,0.00189704,tumor,CD274,0.0301514,0.00223458,0.00423463,8,7,0.955089,0.9766,8,7
+223,AC,NCAM1,tumor,FGFR1,FGFR1,receptor,lower_in_high_risk,0.0127157,AC,NCAM1,0.03125,0.374178,0.408502,8,6,1,1,7,5
+224,Olig. normal,TGFA,tumor,ERBB3,ERBB3,receptor,higher_in_high_risk,0.0254577,Olig. normal,TGFA,0.000854492,0.087502,0.0737806,8,7,1,1,7,6
+227,tumor,ICOSLG,tumor,ICOS,ICOS,receptor,higher_in_high_risk,0.0154419,tumor,ICOSLG,0.0180664,0.00544347,0.00266738,8,7,1,1,8,7
