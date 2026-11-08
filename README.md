@@ -1,3 +1,6 @@
 # glioma_seqfishplus_multiomics
 
-<img src="slide_animation.gif" alt="Tissue overview with zoomed-in region" width="800">
+
+
+https://github.com/user-attachments/assets/a4cd6886-5a9d-48d0-b090-6ea7c10ca13b
+
