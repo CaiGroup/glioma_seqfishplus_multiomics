@@ -15,9 +15,9 @@ plt.rcParams['svg.fonttype'] = 'none'
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------
-DATA_PATH = "/home/jjfox/resnick_ci2_gbm_/Data/DNA_data/"
-PROBE_CSV = "/resnick/groups/CaiLab/jjfox/copied_from_central/DNA_seqFISH/human/24-12-19_human_genome_DNA_seqFISH_final_probes.csv"
-CELLTYPE_CSV = "/resnick/groups/mthomson/ci2_data/CaiLab/gbm/dna_distance_data/V2_24_patients_Obj_mapped.csv"
+DATA_PATH = "/DNA_data/"
+PROBE_CSV = "/24-12-19_human_genome_DNA_seqFISH_final_probes.csv"
+CELLTYPE_CSV = "/V2_24_patients_Obj_mapped.csv"
 CHROM_ARM_DICT_PKL = "chrom_arm_dict.pkl"
 OUT_DIR = "../../../figures/Figure_S2/Figure_S2F"
 
@@ -129,7 +129,7 @@ results_df["ecDNA_name"] = ECDNA_NAME
 results_df["territory_radius_um"] = TERRITORY_RADIUS
 
 results_df.to_csv(
-    f"{OUT_DIR}/PDGFRA_outside_chr4_violin_3883_5597_v2_data.csv", index=False
+    f"{OUT_DIR}/{ECDNA_NAME}_outside_chr{TARGET_CHR}_violin_3883_5597_v2_data.csv", index=False
 )
 
 summary_df = (
@@ -147,7 +147,7 @@ summary_df = (
     .reset_index()
 )
 summary_df.to_csv(
-    f"{OUT_DIR}/PDGFRA_outside_chr4_violin_3883_5597_v2_summary.csv", index=False
+    f"{OUT_DIR}/{ECDNA_NAME}_outside_chr{TARGET_CHR}_3883_5597_v2_summary.csv", index=False
 )
 
 # ---------------------------------------------------------------------------
@@ -178,8 +178,8 @@ ax.set_ylabel(f"{ECDNA_NAME} dots outside {TARGET_CHR} territory (>{TERRITORY_RA
 sns.despine()
 plt.tight_layout()
 
-fig.savefig(f"{OUT_DIR}/PDGFRA_outside_chr4_violin_3883_5597_v2.svg")
-#fig.savefig(f"{OUT_DIR}/PDGFRA_outside_chr4_violin_3883_5597_v2.png", dpi=300)
+fig.savefig(f"{OUT_DIR}/{ECDNA_NAME}_outside_chr{TARGET_CHR}_3883_5597_v2.svg")
+
 #plt.show()
 
 # ---------------------------------------------------------------------------
@@ -208,5 +208,5 @@ stats_df = pd.DataFrame([{
     "mean_5597": group_5597.mean(),
 }])
 stats_df.to_csv(
-    f"{OUT_DIR}/PDGFRA_outside_chr4_violin_3883_5597_v2_stats.csv", index=False
+    f"{OUT_DIR}/{ECDNA_NAME}_outside_chr{TARGET_CHR}_3883_5597_v2_stats.csv", index=False
 )

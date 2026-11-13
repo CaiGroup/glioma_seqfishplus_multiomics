@@ -71,8 +71,7 @@ for target in targets:
         celltypes = pickle.load(f)
 
     dna_loci = pd.read_csv(
-        '/resnick/groups/CaiLab/jjfox/copied_from_central/gbm_dna_analysis/'
-        '25-07-28_combined_dna/human_1k_genomic_loci_final.csv'
+        '/human_1k_genomic_loci_final.csv'
     )
     dna_loci['block_num'] = dna_loci['bin_name'].str.extract(r'block(\d+)_').astype(int)
     dna_loci['bin_num'] = dna_loci['bin_name'].str.extract(r'bin(\d+)').astype(int)
@@ -84,7 +83,7 @@ for target in targets:
     ].reset_index(drop=True)
 
     # get CNV profile for chromosome
-    df = pd.read_csv('/home/jjfox/resnick_ci2_gbm_/Data/DNA_data/CNV_mat.csv')
+    df = pd.read_csv('CNV_mat.csv')
     df.columns = df.columns.str.replace('.', '_', regex=False)
     bin_to_order = dict(zip(dna_loci['bin_name'],dna_loci['order']))
     df.rename(columns=bin_to_order, inplace=True)

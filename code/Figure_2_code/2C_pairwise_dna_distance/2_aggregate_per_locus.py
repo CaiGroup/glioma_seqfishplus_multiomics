@@ -65,7 +65,7 @@ def process_locus(job_id, used_loci, overwrite=False):
     # ========================
     # check if the file already exists
     # ========================
-    out_file = f"/resnick/groups/mthomson/ci2_data/CaiLab/gbm/dna_distance_data/per_locus_results_gpu/{job_id:04d}_{targ}_{JOB_SAMPLE}.pickle"
+    out_file = f"/dna_distance_data/per_locus_results_gpu/{job_id:04d}_{targ}_{JOB_SAMPLE}.pickle"
     
     if os.path.exists(out_file) and not overwrite:
         return f"[JOB {job_id}] skipped {targ} (already exists)"
@@ -82,7 +82,7 @@ def process_locus(job_id, used_loci, overwrite=False):
     # ========================
     # locate files
     # ========================
-    path = '/resnick/groups/mthomson/ci2_data/CaiLab/gbm/dna_distance_data/proximity_data_gpu/'
+    path = '/dna_distance_data/proximity_data_gpu/'
     # get list of pickle files from path
     files = glob.glob(f"{path}/*{JOB_SAMPLE}.pickle")
     # split into distance and cell type
@@ -131,7 +131,7 @@ def process_locus(job_id, used_loci, overwrite=False):
         "mean_malig": mean_malig,
     }
     
-    os.makedirs("/resnick/groups/mthomson/ci2_data/CaiLab/gbm/dna_distance_data/per_locus_results_gpu", exist_ok=True)
+    os.makedirs("/dna_distance_data/per_locus_results_gpu", exist_ok=True)
     
     with open(out_file, "wb") as f:
         pickle.dump(out, f)
@@ -147,7 +147,7 @@ if __name__ == '__main__':
     # ========================
     # load locus list
     # ========================
-    with open('/resnick/groups/mthomson/ci2_data/CaiLab/gbm/dna_distance_data/used_loci.pickle', "rb") as f:
+    with open('/dna_distance_data/used_loci.pickle', "rb") as f:
         used_loci = pickle.load(f)
     
     print(f"Total loci to process: {len(used_loci)}")

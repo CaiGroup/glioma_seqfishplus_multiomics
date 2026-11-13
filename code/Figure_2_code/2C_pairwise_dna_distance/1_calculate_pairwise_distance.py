@@ -40,7 +40,7 @@ samps = ['2543',
 JOB_SAMPLE = samps[JOB_ID]
 
 # Load all loci
-with open('/resnick/groups/mthomson/ci2_data/CaiLab/gbm/dna_distance_data/used_loci.pickle', 'rb') as f:
+with open('used_loci.pickle', 'rb') as f:
     used_loci = pickle.load(f)
 
 print(f"Processing sample {JOB_SAMPLE} for {len(used_loci)} loci")
@@ -52,7 +52,7 @@ print(f"Loading data for sample {JOB_SAMPLE}...")
 load_start = time.time()
 
 # look at specific sample
-path = '/resnick/groups/mthomson/ci2_data/CaiLab/gbm/Data/DNA_data'
+path = 'DNA_data'
 # get all files
 files = glob.glob(f"{path}/*assigned.csv")
 # only keep JOB_SAMPLE
@@ -70,7 +70,7 @@ preprocess_start = time.time()
 
 # fix chromosomes
 # make dictionary
-probe_df = pd.read_csv("/resnick/groups/mthomson/ci2_data/CaiLab/gbm/dna_distance_data/24-12-19_human_genome_DNA_seqFISH_final_probes.csv")
+probe_df = pd.read_csv("24-12-19_human_genome_DNA_seqFISH_final_probes.csv")
 df_unique = probe_df.drop_duplicates(subset='bin_name', keep='last')
 chr_dict = dict(zip(df_unique['bin_name'], df_unique['chr']))
 
@@ -84,14 +84,14 @@ df_1['chromosome_true'] = df_1.blockbin.map(chr_dict)
 
 # map chromosome arms
 # load dictionary mapping chromosome arms to blockbins
-with open('/resnick/groups/mthomson/ci2_data/CaiLab/gbm/dna_distance_data/chrom_arm_dict.pkl', 'rb') as f:
+with open('chrom_arm_dict.pkl', 'rb') as f:
     chrom_arm_dict = pickle.load(f)
 
 # map chromosome arms for blockbins
 df_1['chrom_arm'] = df_1.blockbin.map(chrom_arm_dict)
 
 # load cell type data
-celltype_df = pd.read_csv('/resnick/groups/mthomson/ci2_data/CaiLab/gbm/dna_distance_data/V2_24_patients_Obj_mapped.csv', low_memory=False)
+celltype_df = pd.read_csv('V2_24_patients_Obj_mapped.csv', low_memory=False)
 # replace . with _ in column names
 celltype_df.columns = [
     col.replace('.', '_') for col in celltype_df.columns
@@ -225,13 +225,13 @@ for locus in tqdm(used_loci, desc="Saving loci"):
         data.append(data_tuple)
     
     # Save as pickle
-    with open(f'/resnick/groups/mthomson/ci2_data/CaiLab/gbm/dna_distance_data/proximity_data_gpu/{locus}_distance_{JOB_SAMPLE}.pickle', 'wb') as f:
+    with open(f'/dna_distance_data/proximity_data_gpu/{locus}_distance_{JOB_SAMPLE}.pickle', 'wb') as f:
         pickle.dump(data, f)
     
-    with open(f'/resnick/groups/mthomson/ci2_data/CaiLab/gbm/dna_distance_data/proximity_data_gpu/celltypes_for{locus}_{JOB_SAMPLE}.pickle', 'wb') as f:
+    with open(f'/dna_distance_data/proximity_data_gpu/celltypes_for{locus}_{JOB_SAMPLE}.pickle', 'wb') as f:
         pickle.dump(celltypes, f)
 
-    with open(f'/resnick/groups/mthomson/ci2_data/CaiLab/gbm/dna_distance_data/proximity_data_gpu/cellIDs_for{locus}_{JOB_SAMPLE}.pickle', 'wb') as f:
+    with open(f'/dna_distance_data/proximity_data_gpu/cellIDs_for{locus}_{JOB_SAMPLE}.pickle', 'wb') as f:
         pickle.dump(loci_cell_id_data[locus], f)
 
 print(f"Saving completed in {time.time() - save_start:.2f}s")

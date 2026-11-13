@@ -39,11 +39,11 @@ PALETTE_HEX = [
     "#b2abca", "#e6bcb3", "#9783cf", "#2e9096", "#bd6c41",
 ]
 
-DATA_PATH = "/home/jjfox/resnick_ci2_gbm_/Data/DNA_data/"
-PROBE_CSV = "/resnick/groups/CaiLab/jjfox/copied_from_central/DNA_seqFISH/human/24-12-19_human_genome_DNA_seqFISH_final_probes.csv"
-CELLTYPE_CSV = "/resnick/groups/mthomson/ci2_data/CaiLab/gbm/dna_distance_data/V2_24_patients_Obj_mapped.csv"
+DATA_PATH = "/DNA_data/"
+PROBE_CSV = "24-12-19_human_genome_DNA_seqFISH_final_probes.csv"
+CELLTYPE_CSV = "V2_24_patients_Obj_mapped.csv"
 CHROM_ARM_DICT_PKL = "chrom_arm_dict.pkl"
-ANALYSIS_DIR = "/resnick/groups/mthomson/ci2_data/CaiLab/gbm/V2_runs/analysis"
+ANALYSIS_DIR = "/V2_runs/analysis"
 OUT_DIR = "../../../figures/Figure_2/Figure_2H"
 
 PLOT_HULL = True

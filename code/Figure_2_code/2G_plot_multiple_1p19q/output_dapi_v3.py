@@ -6,7 +6,7 @@ from PIL import Image, ImageDraw
 # ---------------------------------------------------------------------------
 # Configuration (matches the scatter plot script)
 # ---------------------------------------------------------------------------
-DAPI_PATH = "/home/jjfox/resnick_ci2_gbm_/V2_runs/25-06-13_2122_2543_4668_dna/roi_1/dapi_max_aligned.tiff"
+DAPI_PATH = "/V2_runs/25-06-13_2122_2543_4668_dna/roi_1/dapi_max_aligned.tiff"
 OUT_DIR = "../../../figures/Figure_2/Figure_2C"
 OUT_NAME_FULL = "full_dapi_with_roi.png"
 

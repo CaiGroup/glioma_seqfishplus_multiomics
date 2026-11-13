@@ -42,7 +42,7 @@ palette_hex = [
 
 for target in targets:
     # load data
-    data_path = '/resnick/groups/CaiLab/jjfox/copied_from_central/gbm_dna_analysis/25-07-28_combined_dna/DNA_data_table.csv'
+    data_path = 'DNA_data_table.csv'
     combined_df = pd.read_csv(data_path, low_memory=False)
     
     # Rename column for cell ID
@@ -79,7 +79,7 @@ for target in targets:
     cluster_df_bb_T = cluster_df_bb.T
     
     # load dictionary mapping chromosome arms to blockbins
-    with open('/resnick/groups/CaiLab/jjfox/copied_from_central/gbm_dna_analysis/25-07-28_combined_dna/chrom_arm_dict.pkl', 'rb') as f:
+    with open('chrom_arm_dict.pkl', 'rb') as f:
         chrom_arm_dict = pickle.load(f)
     
     # map chromosome arms for blockbins
@@ -88,7 +88,7 @@ for target in targets:
     # map chromosome number for blockbins
     
     # make dictionary
-    probe_df = pd.read_csv("/resnick/groups/CaiLab/jjfox/copied_from_central/DNA_seqFISH/human/24-12-19_human_genome_DNA_seqFISH_final_probes.csv")
+    probe_df = pd.read_csv("24-12-19_human_genome_DNA_seqFISH_final_probes.csv")
     df_unique = probe_df.drop_duplicates(subset='bin_name', keep='last')
     chr_dict = dict(zip(df_unique['bin_name'], df_unique['chr']))
     
@@ -111,7 +111,7 @@ for target in targets:
     grouped_df_selected_columns = pd.concat([grouped_counts_T, cluster_df_ser], join = 'inner', axis = 1)
     
     # look at specific sample
-    path = '/resnick/groups/mthomson/ci2_data/CaiLab/gbm/Data/DNA_data/'
+    path = '/DNA_data/'
     
     # get all files
     files = glob.glob(f"{path}/*assigned.csv")
@@ -127,7 +127,7 @@ for target in targets:
     
     # fix chromosomes
     # make dictionary
-    probe_df = pd.read_csv("/resnick/groups/CaiLab/jjfox/copied_from_central/DNA_seqFISH/human/24-12-19_human_genome_DNA_seqFISH_final_probes.csv")
+    probe_df = pd.read_csv("24-12-19_human_genome_DNA_seqFISH_final_probes.csv")
     df_unique = probe_df.drop_duplicates(subset='bin_name', keep='last')
     chr_dict = dict(zip(df_unique['bin_name'], df_unique['chr']))
     
@@ -141,7 +141,7 @@ for target in targets:
     
     # map chromosome arms
     # load dictionary mapping chromosome arms to blockbins
-    with open('/resnick/groups/CaiLab/jjfox/copied_from_central/gbm_dna_analysis/25-07-28_combined_dna/chrom_arm_dict.pkl', 'rb') as f:
+    with open('chrom_arm_dict.pkl', 'rb') as f:
         chrom_arm_dict = pickle.load(f)
     
     # map chromosome arms for blockbins
@@ -159,7 +159,7 @@ for target in targets:
     celltypes = df_1['predicted_celltype'].unique()
     
     # load DNA Fish locus data
-    dna_loci = pd.read_csv('/resnick/groups/CaiLab/jjfox/copied_from_central/gbm_dna_analysis/25-07-28_combined_dna/human_1k_genomic_loci_final.csv')
+    dna_loci = pd.read_csv('human_1k_genomic_loci_final.csv')
     
     data = []
     for ct in celltypes:

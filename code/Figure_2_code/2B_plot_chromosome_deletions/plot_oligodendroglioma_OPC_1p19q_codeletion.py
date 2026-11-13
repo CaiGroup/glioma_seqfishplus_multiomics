@@ -7,9 +7,6 @@ import zipfile
 import json
 import tempfile
 
-os.environ["PATH"] = os.path.expanduser("~/miniconda3/envs/fox_env24/bin") + ":" + os.environ["PATH"]
-pd.options.mode.chained_assignment = None
-
 # plotting packages
 from bokeh.plotting import figure
 from bokeh.io import export_svgs
@@ -40,7 +37,7 @@ palette_hex = [
 plot_hull = True
 plot_other_chr = True
 
-path = '/home/jjfox/resnick_ci2_gbm_/Data/DNA_data/'
+path = '/DNA_data/'
 
 # get all files
 files = glob.glob(f"{path}/*assigned.csv")
@@ -53,7 +50,7 @@ files = [i for i in files if patient_id in i]
 df_1 = pd.read_csv(files[0], low_memory=False)
 
 # fix chromosomes
-probe_df = pd.read_csv("/resnick/groups/CaiLab/jjfox/copied_from_central/DNA_seqFISH/human/24-12-19_human_genome_DNA_seqFISH_final_probes.csv")
+probe_df = pd.read_csv("24-12-19_human_genome_DNA_seqFISH_final_probes.csv")
 df_unique = probe_df.drop_duplicates(subset='bin_name', keep='last')
 chr_dict = dict(zip(df_unique['bin_name'], df_unique['chr']))
 
@@ -71,7 +68,7 @@ with open('chrom_arm_dict.pkl', 'rb') as f:
 df_1['chrom_arm'] = df_1.blockbin.map(chrom_arm_dict)
 
 # load cell type data
-celltype_df = pd.read_csv('/resnick/groups/mthomson/ci2_data/CaiLab/gbm/dna_distance_data/V2_24_patients_Obj_mapped.csv', low_memory=False)
+celltype_df = pd.read_csv('V2_24_patients_Obj_mapped.csv', low_memory=False)
 celltype_df.columns = [col.replace('.', '_') for col in celltype_df.columns]
 celltype_df.rename(columns={'Unnamed: 0': 'cell_id'}, inplace=True)
 gbm_cells = celltype_df.loc[celltype_df['ID'] == patient_id].copy()
@@ -145,7 +142,7 @@ def plot_cell(df_1, cell, label, out_dir, plot_hull=True, plot_other_chr=True, p
         # get DNA cell id
         dna_cell_id = df_cell['cell'].iloc[0]
         # pull the nuclei masks for the sample
-        analysis_dir = '/resnick/groups/mthomson/ci2_data/CaiLab/gbm/V2_runs/analysis'
+        analysis_dir = ''
         geofiles = glob.glob(analysis_dir + f"/*{patient_id}*/roi*{patient_id}/segmentations/segmentation_nuclei.zip")
         geofile = geofiles[-1]
         def load_geojson_from_zip(zip_path):

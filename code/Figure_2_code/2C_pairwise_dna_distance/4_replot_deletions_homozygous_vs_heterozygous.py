@@ -70,8 +70,7 @@ for target in targets:
 
     # chromosome boundary lines from DNA FISH locus data
     dna_loci = pd.read_csv(
-        '/resnick/groups/CaiLab/jjfox/copied_from_central/gbm_dna_analysis/'
-        '25-07-28_combined_dna/human_1k_genomic_loci_final.csv'
+        '/human_1k_genomic_loci_final.csv'
     )
     dna_loci['block_num'] = dna_loci['bin_name'].str.extract(r'block(\d+)_').astype(int)
     dna_loci['bin_num'] = dna_loci['bin_name'].str.extract(r'bin(\d+)').astype(int)
